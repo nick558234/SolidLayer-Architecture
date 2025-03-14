@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using SolidLayer_Architecture.Data;
 using SolidLayer_Architecture.Repositories;
@@ -7,12 +6,11 @@ using Swipe2TryCore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add the database connection to the services container
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Register database initializer
+builder.Services.AddScoped<DatabaseInitializer>();
 
-// Register repositories - Fix ambiguous reference by using fully qualified type
-builder.Services.AddScoped<IRepository<Swipe2TryCore.Models.Dish>, DishRepository>();
+// Register repositories without EF Core
+builder.Services.AddScoped<IRepository<Dish>, DishRepository>();
 
 // Register services
 builder.Services.AddScoped<IDishService, DishService>();
@@ -36,11 +34,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Ensure the database is created
+// Initialize the database using our custom DatabaseInitializer
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.EnsureCreated();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+    dbInitializer.EnsureDatabaseExists();
 }
 
 app.UseHttpsRedirection();
