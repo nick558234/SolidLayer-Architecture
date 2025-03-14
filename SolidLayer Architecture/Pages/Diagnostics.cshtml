@@ -28,6 +28,41 @@
         <div>
             <p><strong>Connection String:</strong> @Model.MaskedConnectionString</p>
         </div>
+        
+        <div class="mt-3 mb-3">
+            <form method="post">
+                <div class="card bg-light p-3 mb-3">
+                    <h6 class="mb-3">Database Maintenance Actions:</h6>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" asp-for="RunDatabaseFix" id="runDatabaseFix">
+                        <label class="form-check-label" for="runDatabaseFix">
+                            Fix database schema issues (alter column sizes to match requirements)
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" asp-for="RunDishIdFix" id="runDishIdFix">
+                        <label class="form-check-label" for="runDishIdFix">
+                            Fix dish ID issues (normalize IDs to proper format)
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Execute Selected Actions</button>
+                </div>
+            </form>
+        </div>
+        
+        @if (Model.DatabaseFixed)
+        {
+            <div class="alert alert-success mt-3">
+                <i class="bi bi-check-circle"></i> Database schema has been fixed!
+            </div>
+        }
+        
+        @if (Model.DishIdsFixed)
+        {
+            <div class="alert alert-success mt-3">
+                <i class="bi bi-check-circle"></i> Dish IDs have been normalized!
+            </div>
+        }
 
         @if (Model.TableStructure != null && Model.TableStructure.Count > 0)
         {
@@ -52,4 +87,5 @@
 
 <div class="mt-3">
     <a asp-page="/Index" class="btn btn-primary">Back to Home</a>
+    <a asp-page="/Dishes/Index" class="btn btn-success ms-2">Manage Dishes</a>
 </div>

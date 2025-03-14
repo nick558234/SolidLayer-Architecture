@@ -1,0 +1,118 @@
+@page "{id}"
+@model SolidLayer_Architecture.Pages.RestaurantOwner.DishDetailsModel
+@{
+    ViewData["Title"] = "Dish Details";
+}
+
+<div class="container">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">Dish Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    @if (Model.Dish == null)
+    {
+        <div class="alert alert-warning">
+            <h4>Dish not found</h4>
+            <p>The requested dish could not be found.</p>
+            <a asp-page="Dashboard" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+    }
+    else
+    {
+        <div class="card mb-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(Model.Dish.Photo))
+                    {
+                        <img src="@Model.Dish.Photo" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="@Model.Dish.Name">
+                    }
+                    else
+                    {
+                        <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 300px;">
+                            <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1 class="card-title">@Model.Dish.Name</h1>
+                            <div>
+                                @{
+                                    var healthClass = "bg-danger";
+                                    if (!string.IsNullOrEmpty(Model.Dish.HealthFactor))
+                                    {
+                                        if (Model.Dish.HealthFactor.ToLower().Contains("very healthy") || 
+                                            Model.Dish.HealthFactor.ToLower().Contains("healthy"))
+                                        {
+                                            healthClass = "bg-success";
+                                        }
+                                        else if (Model.Dish.HealthFactor.ToLower().Contains("moderate"))
+                                        {
+                                            healthClass = "bg-warning";
+                                        }
+                                    }
+                                }
+                                <span class="badge @healthClass fs-6">
+                                    @(string.IsNullOrEmpty(Model.Dish.HealthFactor) ? "Health: Unknown" : Model.Dish.HealthFactor)
+                                </span>
+                            </div>
+                        </div>
+
+                        <p class="card-text fs-5">@Model.Dish.Description</p>
+
+                        <div class="mt-4">
+                            <h5>Customer Feedback</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    <i class="bi bi-heart-fill text-danger"></i> 
+                                    <span class="fw-bold">@Model.LikesCount Likes</span>
+                                </div>
+                                <div class="me-3">
+                                    <i class="bi bi-x-circle text-secondary"></i> 
+                                    <span class="fw-bold">@Model.DislikesCount Dislikes</span>
+                                </div>
+                                <div>
+                                    <span class="badge @(Model.EngagementRate > 50 ? "bg-success" : "bg-warning")">
+                                        @Model.EngagementRate% Engagement
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Analytics</h5>
+                        <div class="progress mb-3" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @(Model.LikePercentage)%" 
+                                aria-valuenow="@Model.LikePercentage" aria-valuemin="0" aria-valuemax="100">
+                                @Model.LikePercentage%
+                            </div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: @(Model.DislikePercentage)%" 
+                                aria-valuenow="@Model.DislikePercentage" aria-valuemin="0" aria-valuemax="100">
+                                @Model.DislikePercentage%
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="btn-group">
+                                <a asp-page="EditDish" asp-route-id="@Model.Dish.DishID" class="btn btn-primary">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a asp-page="DeleteDish" asp-route-id="@Model.Dish.DishID" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                                <a asp-page="Dashboard" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

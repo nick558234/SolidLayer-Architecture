@@ -1,0 +1,152 @@
+@page
+@model SolidLayer_Architecture.Pages.User.HealthDashboardModel
+@{
+    ViewData["Title"] = "Health Dashboard";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <h1 class="card-title">Your Health Dashboard</h1>
+                    <p class="card-text">
+                        Track your food choices and make healthier decisions.
+                        Based on your swiping history, we provide insights into your eating habits.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Health Score</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-4 fw-bold mb-3">@Model.HealthScore</div>
+                    <div class="progress mb-3" style="height: 20px;">
+                        <div class="progress-bar @Model.HealthScoreColorClass" role="progressbar" 
+                             style="width: @(Model.HealthScore)%" 
+                             aria-valuenow="@Model.HealthScore" aria-valuemin="0" aria-valuemax="100">
+                            @Model.HealthScore/100
+                        </div>
+                    </div>
+                    <p class="mb-0">@Model.HealthScoreMessage</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">Food Preferences</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.LikedDishes.Any())
+                    {
+                        <p class="text-center text-muted">
+                            You haven't liked any dishes yet.
+                            <a asp-page="/Dishes/Swipe" class="btn btn-sm btn-outline-primary mt-2">Start swiping</a>
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="mb-3">Health Breakdown</h6>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Very Healthy</span>
+                                        <span>@Model.HealthBreakdown.VeryHealthy%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @(Model.HealthBreakdown.VeryHealthy)%" aria-valuenow="@Model.HealthBreakdown.VeryHealthy" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Healthy</span>
+                                        <span>@Model.HealthBreakdown.Healthy%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @(Model.HealthBreakdown.Healthy)%" aria-valuenow="@Model.HealthBreakdown.Healthy" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Moderate</span>
+                                        <span>@Model.HealthBreakdown.Moderate%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: @(Model.HealthBreakdown.Moderate)%" aria-valuenow="@Model.HealthBreakdown.Moderate" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Less Healthy</span>
+                                        <span>@Model.HealthBreakdown.LessHealthy%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: @(Model.HealthBreakdown.LessHealthy)%" aria-valuenow="@Model.HealthBreakdown.LessHealthy" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Unhealthy</span>
+                                        <span>@Model.HealthBreakdown.Unhealthy%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: @(Model.HealthBreakdown.Unhealthy)%" aria-valuenow="@Model.HealthBreakdown.Unhealthy" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="mb-3">Top Dishes</h6>
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var dish in Model.LikedDishes.Take(3))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                            <span>@dish.Name</span>
+                                            <span class="badge @(dish.HealthFactor?.ToLower().Contains("healthy") == true ? "bg-success" : "bg-warning")">@dish.HealthFactor</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">Health Tips</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var tip in Model.HealthTips)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-lightbulb text-warning fs-4 me-2"></i>
+                                    </div>
+                                    <div>
+                                        <h6>@tip.Title</h6>
+                                        <p class="text-muted small">@tip.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

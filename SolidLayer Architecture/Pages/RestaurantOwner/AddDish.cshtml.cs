@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SolidLayer_Architecture.Services;
 using Swipe2TryCore.Models;
 
-namespace SolidLayer_Architecture.Pages.Dishes
+namespace SolidLayer_Architecture.Pages.RestaurantOwner
 {
-    public class CreateModel : PageModel
+    public class AddDishModel : PageModel
     {
         private readonly IDishService _dishService;
-        private readonly ILogger<CreateModel> _logger;
+        private readonly ILogger<AddDishModel> _logger;
 
-        public CreateModel(IDishService dishService, ILogger<CreateModel> logger)
+        public AddDishModel(IDishService dishService, ILogger<AddDishModel> logger)
         {
             _dishService = dishService;
             _logger = logger;
+            StatusMessage = string.Empty;
+            ErrorMessage = string.Empty;
         }
 
         [BindProperty]
@@ -30,13 +32,12 @@ namespace SolidLayer_Architecture.Pages.Dishes
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            // Generate a clean ID that won't cause problems
+            // Initialize a new dish with a properly formatted ID
             string newId = GenerateCleanId();
-            _logger.LogInformation("Generated new dish ID for regular create: {DishId}", newId);
+            _logger.LogInformation("Generated new dish ID for restaurant owner: {DishId}", newId);
             
-            // Ensure collections are initialized
             Dish = new Dish
             {
                 DishID = newId,
@@ -44,28 +45,26 @@ namespace SolidLayer_Architecture.Pages.Dishes
                 Restaurants = new List<Restaurant>(),
                 LikeDislikes = new List<LikeDislike>()
             };
-            
-            return Page();
         }
 
         public IActionResult OnPost()
         {
             try
             {
-                // Add minimal validation
+                // Validate input
                 if (string.IsNullOrEmpty(Dish.Name))
                 {
-                    ModelState.AddModelError("Dish.Name", "Name is required");
+                    ModelState.AddModelError("Dish.Name", "Dish name is required");
                 }
-                
-                // Remove validation errors for collection properties that will be initialized
+
+                // Remove validation errors for navigation properties
                 ModelState.Remove("Dish.Categories");
                 ModelState.Remove("Dish.Restaurants");
                 ModelState.Remove("Dish.LikeDislikes");
 
                 if (!ModelState.IsValid)
                 {
-                    ErrorMessage = "Please fix the validation errors.";
+                    ErrorMessage = "Please correct the errors below.";
                     return Page();
                 }
 
@@ -80,7 +79,7 @@ namespace SolidLayer_Architecture.Pages.Dishes
                     Dish.DishID = Dish.DishID.Substring(0, 10);
                 }
 
-                // Ensure HealthFactor isn't too long (max 20 chars) and normalize it
+                // Ensure HealthFactor isn't too long (max 20 chars) and is from the dropdown
                 if (!string.IsNullOrEmpty(Dish.HealthFactor))
                 {
                     if (Dish.HealthFactor.Length > 20)
@@ -92,25 +91,21 @@ namespace SolidLayer_Architecture.Pages.Dishes
                     Dish.HealthFactor = NormalizeHealthFactor(Dish.HealthFactor);
                 }
 
-                // Initialize all collections to avoid null reference exceptions
+                // Initialize collections
                 Dish.Categories ??= new List<Category>();
                 Dish.Restaurants ??= new List<Restaurant>();
                 Dish.LikeDislikes ??= new List<LikeDislike>();
 
-                _logger.LogInformation("Attempting to create dish: {DishName} with ID: {DishId}", Dish.Name, Dish.DishID);
-
+                _logger.LogInformation("Restaurant owner adding dish: {DishName} with ID: {DishId}", Dish.Name, Dish.DishID);
                 _dishService.AddDish(Dish);
-                
-                StatusMessage = "Dish created successfully!";
-                _logger.LogInformation("Dish created successfully: {DishId} - {DishName}", Dish.DishID, Dish.Name);
-                
-                return RedirectToPage("/Index");
+
+                StatusMessage = "Dish added successfully!";
+                return RedirectToPage("Dashboard");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating dish: {Message}", ex.Message);
-                ErrorMessage = $"Error creating dish: {ex.Message}";
-                ModelState.AddModelError(string.Empty, $"Error creating dish: {ex.Message}");
+                _logger.LogError(ex, "Error adding dish from restaurant owner: {Error}", ex.Message);
+                ErrorMessage = $"Error adding dish: {ex.Message}";
                 return Page();
             }
         }

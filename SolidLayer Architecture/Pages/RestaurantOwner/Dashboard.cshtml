@@ -1,0 +1,153 @@
+@page
+@model SolidLayer_Architecture.Pages.RestaurantOwner.DashboardModel
+@{
+    ViewData["Title"] = "Restaurant Dashboard";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Restaurant Dashboard</h1>
+        <a asp-page="/RestaurantOwner/AddDish" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Dish
+        </a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(TempData["StatusMessage"]?.ToString()))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["StatusMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.TotalDishes</h5>
+                    <p class="card-text text-muted">Total Dishes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.TotalLikes</h5>
+                    <p class="card-text text-muted">Total Likes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.TotalDislikes</h5>
+                    <p class="card-text text-muted">Total Dislikes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.EngagementRate%</h5>
+                    <p class="card-text text-muted">Engagement Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Your Dishes</h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.RestaurantDishes.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> You haven't added any dishes yet. 
+                    <a asp-page="/RestaurantOwner/AddDish" class="alert-link">Add your first dish</a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Dish</th>
+                                <th>Health Factor</th>
+                                <th>Likes</th>
+                                <th>Dislikes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.RestaurantDishes)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(item.Dish.Photo))
+                                            {
+                                                <img src="@item.Dish.Photo" alt="@item.Dish.Name" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-light d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                                    <i class="bi bi-image text-muted"></i>
+                                                </div>
+                                            }
+                                            <div>
+                                                <a href="/RestaurantOwner/DishDetails/@item.Dish.DishID" class="text-decoration-none">
+                                                    <h6 class="mb-0">@item.Dish.Name</h6>
+                                                </a>
+                                                <small class="text-muted">@(item.Dish.Description?.Length > 50 ? item.Dish.Description.Substring(0, 50) + "..." : item.Dish.Description)</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var healthClass = "danger";
+                                            if (!string.IsNullOrEmpty(item.Dish.HealthFactor))
+                                            {
+                                                if (item.Dish.HealthFactor.ToLower().Contains("healthy") || 
+                                                    item.Dish.HealthFactor.ToLower().Contains("good"))
+                                                {
+                                                    healthClass = "success";
+                                                }
+                                                else if (item.Dish.HealthFactor.ToLower().Contains("moderate") ||
+                                                        item.Dish.HealthFactor.ToLower().Contains("medium"))
+                                                {
+                                                    healthClass = "warning";
+                                                }
+                                            }
+                                        }
+                                        <span class="badge bg-@healthClass">@(string.IsNullOrEmpty(item.Dish.HealthFactor) ? "Unknown" : item.Dish.HealthFactor)</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@item.Likes</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger">@item.Dislikes</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/RestaurantOwner/DishDetails/@item.Dish.DishID" class="btn btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="/RestaurantOwner/EditDish/@item.Dish.DishID" class="btn btn-outline-primary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/RestaurantOwner/DeleteDish/@item.Dish.DishID" class="btn btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

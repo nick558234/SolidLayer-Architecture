@@ -1,0 +1,271 @@
+@page
+@model SolidLayer_Architecture.Pages.Dishes.SwipeModel
+@{
+    ViewData["Title"] = "Swipe Dishes";
+}
+
+<div class="container">
+    <h2 class="text-center mb-4">Swipe Dishes</h2>
+
+    <div id="result-message" class="alert d-none mb-4"></div>
+
+    <div class="d-flex justify-content-center mb-4">
+        <div class="swipe-instructions">
+            <div class="d-flex justify-content-between">
+                <div class="text-danger"><i class="bi bi-x-circle fs-4"></i> Swipe left to dislike</div>
+                <div class="text-success"><i class="bi bi-heart-fill fs-4"></i> Swipe right to like</div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.HasMoreDishes)
+    {
+        <div class="swipe-container position-relative mb-5">
+            <div id="dish-card" 
+                data-dish-id="@Model.CurrentDish?.DishID"
+                class="dish-card">
+                <div class="card shadow">
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.CurrentDish?.Photo))
+                        {
+                            <img src="@Model.CurrentDish.Photo" alt="@Model.CurrentDish.Name" class="card-img-top dish-image mb-3">
+                        }
+                        else
+                        {
+                            <div class="placeholder-image mb-3">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        }
+                        <h4 class="card-title">@Model.CurrentDish?.Name</h4>
+                        <p class="card-text">@Model.CurrentDish?.Description</p>
+                        <p class="card-text"><small class="text-muted">Health Factor: @Model.CurrentDish?.HealthFactor</small></p>
+                    </div>
+                </div>
+
+                <div class="overlay-dislike d-none">
+                    <i class="bi bi-x-lg text-danger"></i>
+                </div>
+                <div class="overlay-like d-none">
+                    <i class="bi bi-heart-fill text-success"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container text-center">
+            <button id="dislike-button" class="btn btn-lg btn-outline-danger mx-2">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <button id="like-button" class="btn btn-lg btn-outline-success mx-2">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <h3>No more dishes to swipe!</h3>
+            <p>You've gone through all available dishes.</p>
+            <a asp-page="/Index" class="btn btn-primary mt-3">Back to Home</a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .swipe-container {
+            max-width: 400px;
+            margin: 0 auto;
+            perspective: 1000px;
+            height: 450px;
+        }
+
+        .dish-card {
+            width: 100%;
+            position: absolute;
+            cursor: grab;
+            transform-origin: center bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .dish-card.swiping {
+            transition: none;
+        }
+
+        .dish-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .placeholder-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            color: #adb5bd;
+        }
+
+        .overlay-like, .overlay-dislike {
+            position: absolute;
+            top: 40%;
+            font-size: 80px;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .overlay-like {
+            right: 20%;
+        }
+
+        .overlay-dislike {
+            left: 20%;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dishCard = document.getElementById('dish-card');
+            if (!dishCard) return;
+            
+            const dishId = dishCard.dataset.dishId;
+            const likeOverlay = dishCard.querySelector('.overlay-like');
+            const dislikeOverlay = dishCard.querySelector('.overlay-dislike');
+            const likeButton = document.getElementById('like-button');
+            const dislikeButton = document.getElementById('dislike-button');
+            const resultMessage = document.getElementById('result-message');
+
+            // Set up Hammer.js for touch gestures
+            const hammertime = new Hammer(dishCard);
+            hammertime.on('pan', handlePan);
+            hammertime.on('panend', handlePanEnd);
+
+            // Button events
+            likeButton.addEventListener('click', () => handleSwipe('right'));
+            dislikeButton.addEventListener('click', () => handleSwipe('left'));
+
+            // Variables for tracking swipe
+            let xPosition = 0;
+            let rotation = 0;
+            const threshold = 100; // minimum distance to consider a swipe
+
+            function handlePan(event) {
+                dishCard.classList.add('swiping');
+                xPosition = event.deltaX;
+                rotation = event.deltaX * 0.1; // Slight rotation while swiping
+
+                // Apply transformations
+                dishCard.style.transform = `translateX(${xPosition}px) rotate(${rotation}deg)`;
+
+                // Show overlay based on direction
+                if (xPosition > 50) {
+                    likeOverlay.classList.remove('d-none');
+                    dislikeOverlay.classList.add('d-none');
+                } else if (xPosition < -50) {
+                    dislikeOverlay.classList.remove('d-none');
+                    likeOverlay.classList.add('d-none');
+                } else {
+                    likeOverlay.classList.add('d-none');
+                    dislikeOverlay.classList.add('d-none');
+                }
+            }
+
+            function handlePanEnd(event) {
+                dishCard.classList.remove('swiping');
+                
+                if (xPosition > threshold) {
+                    handleSwipe('right'); // Like
+                } else if (xPosition < -threshold) {
+                    handleSwipe('left'); // Dislike
+                } else {
+                    // Reset position if not swiped enough
+                    dishCard.style.transform = '';
+                    likeOverlay.classList.add('d-none');
+                    dislikeOverlay.classList.add('d-none');
+                }
+            }
+
+            function handleSwipe(direction) {
+                // Animate card off screen
+                const animationDistance = direction === 'right' ? window.innerWidth : -window.innerWidth;
+                dishCard.style.transform = `translateX(${animationDistance}px) rotate(${direction === 'right' ? 45 : -45}deg)`;
+                
+                // Show proper overlay
+                if (direction === 'right') {
+                    likeOverlay.classList.remove('d-none');
+                    dislikeOverlay.classList.add('d-none');
+                } else {
+                    dislikeOverlay.classList.remove('d-none');
+                    likeOverlay.classList.add('d-none');
+                }
+                
+                // Send like/dislike to server
+                const isLike = direction === 'right';
+                recordPreference(dishId, isLike);
+            }
+
+            function recordPreference(dishId, isLike) {
+                // Disable buttons while processing
+                likeButton.disabled = true;
+                dislikeButton.disabled = true;
+
+                fetch('/api/dishes/preference', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ dishId: dishId, isLike: isLike })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showResult(isLike ? 'liked' : 'disliked');
+                        // Navigate to next dish after a short delay
+                        setTimeout(() => {
+                            window.location.href = '/dishes/swipe';
+                        }, 1000);
+                    } else {
+                        showResult('error', data.message || 'Something went wrong');
+                        // Reset card position
+                        dishCard.style.transform = '';
+                        likeOverlay.classList.add('d-none');
+                        dislikeOverlay.classList.add('d-none');
+                        
+                        // Re-enable buttons
+                        likeButton.disabled = false;
+                        dislikeButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    showResult('error', error.toString());
+                    // Reset card position
+                    dishCard.style.transform = '';
+                    likeOverlay.classList.add('d-none');
+                    dislikeOverlay.classList.add('d-none');
+                    
+                    // Re-enable buttons
+                    likeButton.disabled = false;
+                    dislikeButton.disabled = false;
+                });
+            }
+
+            function showResult(status, message) {
+                resultMessage.classList.remove('d-none', 'alert-success', 'alert-danger', 'alert-info');
+                
+                if (status === 'liked') {
+                    resultMessage.classList.add('alert-success');
+                    resultMessage.innerHTML = '<i class="bi bi-heart-fill"></i> You liked this dish!';
+                } else if (status === 'disliked') {
+                    resultMessage.classList.add('alert-danger');
+                    resultMessage.innerHTML = '<i class="bi bi-x-circle"></i> You disliked this dish.';
+                } else {
+                    resultMessage.classList.add('alert-warning');
+                    resultMessage.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${message}`;
+                }
+            }
+        });
+    </script>
+}

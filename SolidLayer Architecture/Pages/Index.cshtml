@@ -2,45 +2,146 @@
 @model SolidLayer_Architecture.Pages.IndexModel
 
 @{
-    ViewData["Title"] = "Dish List";
+    ViewData["Title"] = "Swipe 'n Try";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container">
+    <div class="text-center my-4">
+        <h1 class="display-4">Swipe 'n Try</h1>
+        <p class="lead">Your next meal is just a swipe away!</p>
+        <p class="text-muted">Swipe 'n Try, don't let good food pass by!</p>
+    </div>
 
-<form method="get">
-    <div class="form-group mb-3">
-        <div class="input-group">
-            <input type="text" class="form-control" asp-for="SearchTerm" placeholder="Search dishes...">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Search</button>
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2">
+            <form method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" asp-for="SearchTerm" placeholder="Search for dishes...">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+            </form>
+
+            <div class="d-grid gap-2">
+                <a asp-page="/Dishes/Swipe" class="btn btn-success btn-lg">
+                    <i class="bi bi-hand-index-thumb"></i> Start Swiping
+                </a>
             </div>
         </div>
     </div>
-</form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Health Factor</th>
-            <th>Photo</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var dish in Model.Dishes)
-        {
-            <tr>
-                <td>@dish.Name</td>
-                <td>@dish.Description</td>
-                <td>@dish.HealthFactor</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(dish.Photo))
+    <!-- USPs Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h3>Why Swipe 'n Try?</h3>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up text-primary" style="font-size: 2.5rem;"></i>
+                    <h5 class="card-title mt-3">Personalized Recommendations</h5>
+                    <p class="card-text">The more you swipe, the better food suggestions you get.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-egg-fried text-primary" style="font-size: 2.5rem;"></i>
+                    <h5 class="card-title mt-3">All-In-One Meals</h5>
+                    <p class="card-text">Find breakfast, lunch, dinner, and snacks in one place.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart-pulse text-primary" style="font-size: 2.5rem;"></i>
+                    <h5 class="card-title mt-3">Healthier Choices</h5>
+                    <p class="card-text">Make better food decisions with easy health tips.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Featured Dishes</h3>
+                <a asp-page="/Dishes/Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Dish
+                </a>
+            </div>
+            
+            @if (!Model.Dishes.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No dishes found. Try adding some dishes first!
+                </div>
+            }
+            else
+            {
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    @foreach (var dish in Model.Dishes)
                     {
-                        <img src="@dish.Photo" alt="@dish.Name" width="100" />
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                @if (!string.IsNullOrEmpty(dish.Photo))
+                                {
+                                    <img src="@dish.Photo" class="card-img-top" alt="@dish.Name" style="height: 200px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                    </div>
+                                }
+                                <div class="card-body">
+                                    <h5 class="card-title">@dish.Name</h5>
+                                    <p class="card-text">@dish.Description</p>
+                                    
+                                    @{
+                                        var healthClass = "bg-danger";
+                                        if (!string.IsNullOrEmpty(dish.HealthFactor))
+                                        {
+                                            if (dish.HealthFactor.ToLower().Contains("very healthy") || 
+                                                dish.HealthFactor.ToLower().Contains("healthy"))
+                                            {
+                                                healthClass = "bg-success";
+                                            }
+                                            else if (dish.HealthFactor.ToLower().Contains("moderate"))
+                                            {
+                                                healthClass = "bg-warning";
+                                            }
+                                        }
+                                    }
+                                    
+                                    <div class="mt-2">
+                                        <span class="badge @healthClass">@(string.IsNullOrEmpty(dish.HealthFactor) ? "Unknown" : dish.HealthFactor)</span>
+                                        @if (Model.DishLikeCounts.ContainsKey(dish.DishID))
+                                        {
+                                            <span class="badge bg-primary ms-1">
+                                                <i class="bi bi-heart-fill"></i> @Model.DishLikeCounts[dish.DishID]
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <div class="btn-group d-flex">
+                                        <a href="/Dishes/Details/@dish.DishID" class="btn btn-outline-primary w-100">
+                                            <i class="bi bi-info-circle"></i> View
+                                        </a>
+                                        <a href="/Dishes/Edit/@dish.DishID" class="btn btn-outline-secondary w-100">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

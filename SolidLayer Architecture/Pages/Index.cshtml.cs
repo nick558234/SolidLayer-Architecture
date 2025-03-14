@@ -8,13 +8,16 @@ namespace SolidLayer_Architecture.Pages
     public class IndexModel : PageModel
     {
         private readonly IDishService _dishService;
+        private readonly ILikeDislikeService _likeDislikeService;
 
-        public IndexModel(IDishService dishService)
+        public IndexModel(IDishService dishService, ILikeDislikeService likeDislikeService)
         {
             _dishService = dishService;
+            _likeDislikeService = likeDislikeService;
         }
 
         public IList<Dish> Dishes { get; set; } = new List<Dish>();
+        public Dictionary<string, int> DishLikeCounts { get; set; } = new Dictionary<string, int>();
 
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
@@ -28,6 +31,12 @@ namespace SolidLayer_Architecture.Pages
             else
             {
                 Dishes = _dishService.GetAllDishes().ToList();
+            }
+
+            // Get like counts for each dish
+            foreach (var dish in Dishes)
+            {
+                DishLikeCounts[dish.DishID] = _likeDislikeService.GetLikeCount(dish.DishID);
             }
         }
     }

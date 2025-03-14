@@ -1,0 +1,103 @@
+@page "{id}"
+@model SolidLayer_Architecture.Pages.RestaurantOwner.EditDishModel
+@{
+    ViewData["Title"] = "Edit Dish";
+}
+
+<div class="container">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">Edit Dish</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Edit Dish</h2>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle"></i> @Model.StatusMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle"></i> @Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (Model.Dish == null)
+                    {
+                        <div class="alert alert-warning">
+                            <h4>Dish not found</h4>
+                            <p>The requested dish could not be found.</p>
+                            <a asp-page="Dashboard" class="btn btn-primary">Back to Dashboard</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            <input type="hidden" asp-for="Dish.DishID" />
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Dish.Name" class="form-label">Name *</label>
+                                <input asp-for="Dish.Name" class="form-control" required />
+                                <span asp-validation-for="Dish.Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Dish.Description" class="form-label">Description</label>
+                                <textarea asp-for="Dish.Description" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="Dish.Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Dish.HealthFactor" class="form-label">Health Factor</label>
+                                <select asp-for="Dish.HealthFactor" class="form-select">
+                                    <option value="">Select health factor...</option>
+                                    <option value="Very Healthy">Very Healthy</option>
+                                    <option value="Healthy">Healthy</option>
+                                    <option value="Moderate">Moderate</option>
+                                    <option value="Less Healthy">Less Healthy</option>
+                                    <option value="Unhealthy">Unhealthy</option>
+                                </select>
+                                <span asp-validation-for="Dish.HealthFactor" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label asp-for="Dish.Photo" class="form-label">Photo URL</label>
+                                <input asp-for="Dish.Photo" class="form-control" />
+                                <span asp-validation-for="Dish.Photo" class="text-danger"></span>
+                                
+                                @if (!string.IsNullOrEmpty(Model.Dish.Photo))
+                                {
+                                    <div class="mt-2">
+                                        <img src="@Model.Dish.Photo" class="img-thumbnail" style="height: 100px;" alt="Current photo" />
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-page="Dashboard" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

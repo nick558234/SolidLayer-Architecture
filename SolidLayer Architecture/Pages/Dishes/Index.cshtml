@@ -1,0 +1,119 @@
+@page
+@model SolidLayer_Architecture.Pages.Dishes.IndexModel
+@{
+    ViewData["Title"] = "Dishes Management";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Dishes Management</h1>
+        <a asp-page="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Dish
+        </a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(TempData["StatusMessage"]?.ToString()))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["StatusMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                @if (!Model.Dishes.Any())
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-emoji-frown text-muted" style="font-size: 3rem;"></i>
+                        <p class="mt-3">No dishes found in the database.</p>
+                        <a asp-page="Create" class="btn btn-primary">Add Your First Dish</a>
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Health Factor</th>
+                                <th>Likes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dish in Model.Dishes)
+                            {
+                                <tr>
+                                    <td style="width: 80px;">
+                                        @if (!string.IsNullOrEmpty(dish.Photo))
+                                        {
+                                            <img src="@dish.Photo" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" alt="@dish.Name">
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px;">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@dish.Name</div>
+                                        <div class="small text-muted text-truncate" style="max-width: 300px;">
+                                            @(string.IsNullOrEmpty(dish.Description) ? "No description" : dish.Description)
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var healthClass = "bg-danger";
+                                            if (!string.IsNullOrEmpty(dish.HealthFactor))
+                                            {
+                                                if (dish.HealthFactor.ToLower().Contains("very healthy") || 
+                                                    dish.HealthFactor.ToLower().Contains("healthy"))
+                                                {
+                                                    healthClass = "bg-success";
+                                                }
+                                                else if (dish.HealthFactor.ToLower().Contains("moderate"))
+                                                {
+                                                    healthClass = "bg-warning";
+                                                }
+                                            }
+                                        }
+                                        <span class="badge @healthClass">
+                                            @(string.IsNullOrEmpty(dish.HealthFactor) ? "Unknown" : dish.HealthFactor)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success me-2">
+                                                <i class="bi bi-hand-thumbs-up"></i> @Model.LikeCounts[dish.DishID]
+                                            </span>
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-hand-thumbs-down"></i> @Model.DislikeCounts[dish.DishID]
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-page="Details" asp-route-id="@dish.DishID" class="btn btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-page="Edit" asp-route-id="@dish.DishID" class="btn btn-outline-secondary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-page="Delete" asp-route-id="@dish.DishID" class="btn btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -22,13 +22,36 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        // Helper method to ensure ID is within allowed length
+        // Helper method to ensure ID is within allowed length and correctly formatted
         private string EnsureIdLength(string id, int maxLength = 10)
         {
+            // If empty, generate a clean ID
             if (string.IsNullOrEmpty(id))
-                return Guid.NewGuid().ToString().Substring(0, maxLength);
+            {
+                // Use a simple format with a random number prefix between 100-999
+                return $"d{new Random().Next(100, 999)}{new Random().Next(1000, 9999)}";
+            }
                 
-            return id.Length <= maxLength ? id : id.Substring(0, maxLength);
+            // If the ID is too long or contains hyphens, generate a new ID
+            if (id.Length > maxLength || id.Contains("-"))
+            {
+                // Preserve the first character if it's alphabetic
+                char firstChar = id.Length > 0 && char.IsLetter(id[0]) ? id[0] : 'd';
+                
+                // Create a clean ID with some randomness
+                return $"{firstChar}{new Random().Next(100, 999)}{new Random().Next(1000, 9999)}";
+            }
+            
+            return id;
+        }
+
+        // Helper method to ensure text fields don't exceed DB column length
+        private string LimitLength(string? value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+                
+            return value.Length > maxLength ? value.Substring(0, maxLength) : value;
         }
 
         public IEnumerable<Dish> GetAll()
@@ -50,25 +73,35 @@ namespace SolidLayer_Architecture.Repositories
 
         public void Insert(Dish dish)
         {
-            // Ensure dish ID is not too long for the database column
-            dish.DishID = EnsureIdLength(dish.DishID ?? Guid.NewGuid().ToString());
-            
-            string sql = @"
-                INSERT INTO DISHES (DishID, Name, Description, Photo, HealthFactor) 
-                VALUES (@DishID, @Name, @Description, @Photo, @HealthFactor)";
-            
-            var parameters = new[]
+            try
             {
-                new SqlParameter("@DishID", dish.DishID),
-                new SqlParameter("@Name", dish.Name?.Length > 100 ? dish.Name.Substring(0, 100) : dish.Name ?? string.Empty),
-                new SqlParameter("@Description", dish.Description?.Length > 500 ? dish.Description.Substring(0, 500) : dish.Description ?? string.Empty),
-                new SqlParameter("@Photo", dish.Photo?.Length > 255 ? dish.Photo.Substring(0, 255) : dish.Photo ?? string.Empty),
-                new SqlParameter("@HealthFactor", dish.HealthFactor?.Length > 50 ? dish.HealthFactor.Substring(0, 50) : dish.HealthFactor ?? string.Empty)
-            };
-            
-            _logger.LogInformation("Inserting dish with ID {DishId} using raw SQL", dish.DishID);
-            var rowsAffected = ExecuteNonQuery(sql, parameters);
-            _logger.LogInformation("Insert successful, {Rows} rows affected", rowsAffected);
+                // Ensure dish ID is not too long for the database column
+                dish.DishID = EnsureIdLength(dish.DishID ?? Guid.NewGuid().ToString());
+                
+                string sql = @"
+                    INSERT INTO DISHES (DishID, Name, Description, Photo, HealthFactor) 
+                    VALUES (@DishID, @Name, @Description, @Photo, @HealthFactor)";
+                
+                // The error shows HealthFactor column is being truncated, so we need to limit its length
+                // Seems the database column is smaller than we expected
+                var parameters = new[]
+                {
+                    new SqlParameter("@DishID", dish.DishID),
+                    new SqlParameter("@Name", LimitLength(dish.Name, 100)),
+                    new SqlParameter("@Description", LimitLength(dish.Description, 500)),
+                    new SqlParameter("@Photo", LimitLength(dish.Photo, 255)),
+                    new SqlParameter("@HealthFactor", LimitLength(dish.HealthFactor, 20)) // Reduced from 50 to 20 characters
+                };
+                
+                _logger.LogInformation("Inserting dish with ID {DishId} using raw SQL", dish.DishID);
+                var rowsAffected = ExecuteNonQuery(sql, parameters);
+                _logger.LogInformation("Insert successful, {Rows} rows affected", rowsAffected);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inserting dish with raw SQL. Error message: {Message}", ex.Message);
+                throw; // Don't fallback to EF Core since we've removed it
+            }
         }
 
         public void Update(Dish dish)
@@ -78,10 +111,10 @@ namespace SolidLayer_Architecture.Repositories
             var parameters = new[]
             {
                 new SqlParameter("@DishID", dish.DishID),
-                new SqlParameter("@Name", dish.Name?.Length > 100 ? dish.Name.Substring(0, 100) : dish.Name ?? string.Empty),
-                new SqlParameter("@Description", dish.Description?.Length > 500 ? dish.Description.Substring(0, 500) : dish.Description ?? string.Empty),
-                new SqlParameter("@Photo", dish.Photo?.Length > 255 ? dish.Photo.Substring(0, 255) : dish.Photo ?? string.Empty),
-                new SqlParameter("@HealthFactor", dish.HealthFactor?.Length > 50 ? dish.HealthFactor.Substring(0, 50) : dish.HealthFactor ?? string.Empty)
+                new SqlParameter("@Name", LimitLength(dish.Name, 100)),
+                new SqlParameter("@Description", LimitLength(dish.Description, 500)),
+                new SqlParameter("@Photo", LimitLength(dish.Photo, 255)),
+                new SqlParameter("@HealthFactor", LimitLength(dish.HealthFactor, 20)) // Reduced from 50 to 20
             };
             
             ExecuteNonQuery(sql, parameters);

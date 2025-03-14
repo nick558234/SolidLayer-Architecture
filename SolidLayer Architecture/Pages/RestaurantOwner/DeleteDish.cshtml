@@ -1,0 +1,88 @@
+@page "{id}"
+@model SolidLayer_Architecture.Pages.RestaurantOwner.DeleteDishModel
+@{
+    ViewData["Title"] = "Delete Dish";
+}
+
+<div class="container">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">Delete Dish</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2>Delete Dish</h2>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle"></i> @Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (Model.Dish == null)
+                    {
+                        <div class="alert alert-warning">
+                            <h4>Dish not found</h4>
+                            <p>The requested dish could not be found.</p>
+                            <a asp-page="Dashboard" class="btn btn-primary">Back to Dashboard</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p class="fs-5"><i class="bi bi-exclamation-triangle"></i> Are you sure you want to delete this dish?</p>
+                            <p>This action cannot be undone.</p>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="row g-0">
+                                <div class="col-md-3">
+                                    @if (!string.IsNullOrEmpty(Model.Dish.Photo))
+                                    {
+                                        <img src="@Model.Dish.Photo" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="@Model.Dish.Name">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 200px;">
+                                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <h3 class="card-title">@Model.Dish.Name</h3>
+                                        <p class="card-text">@Model.Dish.Description</p>
+                                        <p class="card-text">
+                                            <small class="text-muted">Health Factor: @Model.Dish.HealthFactor</small>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="badge bg-success">@Model.LikesCount Likes</span>
+                                            <span class="badge bg-danger ms-2">@Model.DislikesCount Dislikes</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="post">
+                            <input type="hidden" asp-for="Dish.DishID" />
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-page="Dashboard" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-danger">Delete Dish</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
