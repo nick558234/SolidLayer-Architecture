@@ -1,0 +1,63 @@
+@page
+@model SolidLayer_Architecture.Pages.Dishes.CreateModel
+
+@{
+    ViewData["Title"] = "Create Dish";
+}
+
+<h2>Create Dish</h2>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form method="post">
+    <input type="hidden" asp-for="Dish.DishID" value="@(Model.Dish.DishID ?? Guid.NewGuid().ToString())" />
+    <div class="form-group mb-3">
+        <label asp-for="Dish.Name">Name</label>
+        <input asp-for="Dish.Name" class="form-control" required />
+        <span asp-validation-for="Dish.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Dish.Description">Description</label>
+        <textarea asp-for="Dish.Description" class="form-control"></textarea>
+        <span asp-validation-for="Dish.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Dish.HealthFactor">Health Factor</label>
+        <input asp-for="Dish.HealthFactor" class="form-control" />
+        <span asp-validation-for="Dish.HealthFactor" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Dish.Photo">Photo URL</label>
+        <input asp-for="Dish.Photo" class="form-control" />
+        <span asp-validation-for="Dish.Photo" class="text-danger"></span>
+    </div>
+    <p class="text-info">Note: Categories, Restaurants, and Likes/Dislikes will be initialized automatically.</p>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="/Index" class="btn btn-secondary">Back to List</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Custom validation to ignore navigation properties
+        $(document).ready(function() {
+            $.validator.setDefaults({
+                ignore: [
+                    "Dish.Categories",
+                    "Dish.Restaurants",
+                    "Dish.LikeDislikes"
+                ]
+            });
+        });
+    </script>
+}

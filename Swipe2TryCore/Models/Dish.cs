@@ -9,13 +9,13 @@
         public string HealthFactor { get; set; }
 
         // Many-to-many relationship with categories
-        public ICollection<Category> Categories { get; set; }
+        public ICollection<Category>? Categories { get; set; }
 
         // Many-to-many relationship with restaurants
-        public ICollection<Restaurant> Restaurants { get; set; }
+        public ICollection<Restaurant>? Restaurants { get; set; }
 
         // Likes and dislikes
-        public ICollection<LikeDislike> LikeDislikes { get; set; }
+        public ICollection<LikeDislike>? LikeDislikes { get; set; }
     }
 
 }
