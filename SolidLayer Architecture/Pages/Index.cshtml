@@ -1,0 +1,35 @@
+﻿@page
+@model SolidLayer_Architecture.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Dish List";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Health Factor</th>
+            <th>Photo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dish in Model.Dishes)
+        {
+            <tr>
+                <td>@dish.Name</td>
+                <td>@dish.Description</td>
+                <td>@dish.HealthFactor</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(dish.Photo))
+                    {
+                        <img src="@dish.Photo" alt="@dish.Name" width="100" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
