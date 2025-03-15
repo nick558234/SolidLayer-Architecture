@@ -1,10 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Swipe2TryCore.Models;
+using Swipe2TryCore.Models; // Use only this model namespace
 using System.Data;
 
 namespace SolidLayer_Architecture.Repositories
 {
-    public class LikeDislikeRepository : IRepository<LikeDislike>
+    public class LikeDislikeRepository : IRepository<Swipe2TryCore.Models.LikeDislike>
     {
         private readonly string? _connectionString;
         private readonly ILogger<LikeDislikeRepository> _logger;
@@ -67,12 +67,12 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public IEnumerable<LikeDislike> GetAll()
+        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetAll()
         {
             return ExecuteQuery("SELECT * FROM LIKES_DISLIKES");
         }
 
-        public LikeDislike? GetById(string id)
+        public Swipe2TryCore.Models.LikeDislike? GetById(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -84,7 +84,7 @@ namespace SolidLayer_Architecture.Repositories
                 new SqlParameter("@LikeDislikeID", id)).FirstOrDefault();
         }
 
-        public void Insert(LikeDislike likeDislike)
+        public void Insert(Swipe2TryCore.Models.LikeDislike likeDislike)
         {
             // Generate a new ID if none is provided
             if (string.IsNullOrEmpty(likeDislike.LikeDislikeID))
@@ -109,7 +109,7 @@ namespace SolidLayer_Architecture.Repositories
             _logger.LogInformation("Insert successful, {Rows} rows affected", rowsAffected);
         }
 
-        public void Update(LikeDislike likeDislike)
+        public void Update(Swipe2TryCore.Models.LikeDislike likeDislike)
         {
             string sql = "UPDATE LIKES_DISLIKES SET UserID = @UserID, DishID = @DishID, IsLike = @IsLike WHERE LikeDislikeID = @LikeDislikeID";
             
@@ -130,19 +130,19 @@ namespace SolidLayer_Architecture.Repositories
                 new SqlParameter("@LikeDislikeID", id));
         }
 
-        public IEnumerable<LikeDislike> GetByUserIdAndDishId(string userId, string dishId)
+        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByUserIdAndDishId(string userId, string dishId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE UserID = @UserID AND DishID = @DishID";
             return ExecuteQuery(sql, new SqlParameter("@UserID", userId), new SqlParameter("@DishID", dishId));
         }
 
-        public IEnumerable<LikeDislike> GetByUserId(string userId)
+        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByUserId(string userId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE UserID = @UserID";
             return ExecuteQuery(sql, new SqlParameter("@UserID", userId));
         }
 
-        public IEnumerable<LikeDislike> GetByDishId(string dishId)
+        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByDishId(string dishId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE DishID = @DishID";
             return ExecuteQuery(sql, new SqlParameter("@DishID", dishId));
@@ -206,15 +206,15 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public IEnumerable<LikeDislike> ExecuteQuery(string sql, params object[] parameters)
+        public IEnumerable<Swipe2TryCore.Models.LikeDislike> ExecuteQuery(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {
                 _logger.LogError("Connection string is null");
-                return Enumerable.Empty<LikeDislike>();
+                return Enumerable.Empty<Swipe2TryCore.Models.LikeDislike>();
             }
 
-            List<LikeDislike> likeDislikes = new List<LikeDislike>();
+            List<Swipe2TryCore.Models.LikeDislike> likeDislikes = new List<Swipe2TryCore.Models.LikeDislike>();
 
             try
             {
@@ -233,15 +233,18 @@ namespace SolidLayer_Architecture.Repositories
                         {
                             try
                             {
-                                var likeDislike = new LikeDislike
+                                // Create and initialize a new LikeDislike with data from the reader
+                                var likeDislike = new Swipe2TryCore.Models.LikeDislike
                                 {
-                                    LikeDislikeID = reader["LikeDislikeID"].ToString(),
-                                    UserID = reader["UserID"].ToString(),
-                                    DishID = reader["DishID"].ToString(),
+                                    LikeDislikeID = reader["LikeDislikeID"]?.ToString() ?? string.Empty,
+                                    UserID = reader["UserID"]?.ToString() ?? string.Empty,
+                                    DishID = reader["DishID"]?.ToString() ?? string.Empty,
                                     IsLike = Convert.ToBoolean(reader["IsLike"]),
-                                    User = null, // These navigation properties would be loaded separately in a real app
-                                    Dish = null
+                                    // Navigation properties will be null initially
+                                    User = null!, 
+                                    Dish = null!
                                 };
+                                
                                 likeDislikes.Add(likeDislike);
                             }
                             catch (Exception ex)
@@ -290,7 +293,7 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public LikeDislike? ExecuteScalar(string sql, params object[] parameters)
+        public Swipe2TryCore.Models.LikeDislike? ExecuteScalar(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {
@@ -311,9 +314,10 @@ namespace SolidLayer_Architecture.Repositories
                     connection.Open();
                     var result = command.ExecuteScalar();
                     
-                    if (result != null)
+                    if (result != null && result != DBNull.Value)
                     {
-                        return GetById(result.ToString());
+                        string id = result.ToString() ?? string.Empty;
+                        return GetById(id); // Safe to pass non-null string
                     }
                 }
             }

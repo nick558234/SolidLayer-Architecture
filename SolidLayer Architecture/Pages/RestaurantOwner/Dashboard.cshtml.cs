@@ -7,7 +7,7 @@ namespace SolidLayer_Architecture.Pages.RestaurantOwner
 {
     public class DishWithStats
     {
-        public Dish Dish { get; set; }
+        public Dish Dish { get; set; } = null!; // Using null-forgiving operator
         public int Likes { get; set; }
         public int Dislikes { get; set; }
     }

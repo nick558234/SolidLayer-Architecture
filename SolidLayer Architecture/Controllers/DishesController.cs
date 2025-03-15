@@ -50,7 +50,8 @@ namespace SolidLayer_Architecture.Controllers
 
         public class PreferenceRequest
         {
-            public string DishId { get; set; }
+            // Initialize to empty string rather than use nullable
+            public string DishId { get; set; } = string.Empty;
             public bool IsLike { get; set; }
         }
     }

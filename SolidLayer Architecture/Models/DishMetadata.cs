@@ -8,9 +8,9 @@ namespace SolidLayer_Architecture.Models
 {
     // Apply this metadata to the Dish class from Swipe2TryCore
     [ModelMetadataType(typeof(DishMetadata))]
-    public partial class Dish
+    public partial class DishMetadataApplier : Swipe2TryCore.Models.Dish
     {
-        // This is a partial class that extends Swipe2TryCore.Models.Dish
+        // This is a wrapper class that extends Swipe2TryCore.Models.Dish
     }
 
     public class DishMetadata
@@ -25,6 +25,7 @@ namespace SolidLayer_Architecture.Models
 
         public string? Photo { get; set; }
 
+        [Display(Name = "Health Factor")]
         public string? HealthFactor { get; set; }
 
         // Mark collections as not required for validation

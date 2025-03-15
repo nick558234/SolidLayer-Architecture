@@ -1,13 +1,14 @@
-﻿namespace SolidLayer_Architecture.Models
+﻿using Swipe2TryCore.Models;
+
+namespace SolidLayer_Architecture.Models
 {
     public class DishCategory
     {
-        public string DishID { get; set; }
-        public string CategoryID { get; set; }
+        public string DishID { get; set; } = string.Empty;
+        public string CategoryID { get; set; } = string.Empty;
 
         // Navigation properties
-        public Dish Dish { get; set; }
-        public Category Category { get; set; }
+        public Swipe2TryCore.Models.Dish Dish { get; set; } = new Swipe2TryCore.Models.Dish();
+        public Category Category { get; set; } = new Category();
     }
-
 }

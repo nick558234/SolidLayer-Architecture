@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SolidLayer_Architecture.Models;
 using SolidLayer_Architecture.Services;
 using Swipe2TryCore.Models;
 
@@ -6,8 +7,8 @@ namespace SolidLayer_Architecture.Pages.User
 {
     public class HealthTip
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; } = string.Empty; // Initialize to avoid warning
+        public string Description { get; set; } = string.Empty; // Initialize to avoid warning
     }
 
     public class HealthBreakdown
@@ -28,12 +29,23 @@ namespace SolidLayer_Architecture.Pages.User
         {
             _dishService = dishService;
             _likeDislikeService = likeDislikeService;
+            
+            // Initialize properties to avoid warnings
+            HealthScoreColorClass = "bg-secondary"; // Default color
+            HealthScoreMessage = "No data available yet";
+            
+            // For demonstration purposes, we're not setting Title/Description (not used in the view)
+            // but we'll initialize them anyway to avoid warnings
+            Title = "Health Dashboard";
+            Description = "Track your food choices and make healthier decisions.";
         }
 
-        public List<Dish> LikedDishes { get; set; } = new List<Dish>();
+        public List<Swipe2TryCore.Models.Dish> LikedDishes { get; set; } = new List<Swipe2TryCore.Models.Dish>();
         public int HealthScore { get; set; }
         public string HealthScoreColorClass { get; set; }
         public string HealthScoreMessage { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
         public HealthBreakdown HealthBreakdown { get; set; } = new HealthBreakdown();
         public List<HealthTip> HealthTips { get; set; } = new List<HealthTip>();
 

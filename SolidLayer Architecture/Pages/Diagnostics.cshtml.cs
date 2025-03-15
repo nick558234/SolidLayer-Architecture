@@ -102,22 +102,29 @@ namespace SolidLayer_Architecture.Pages
                     
                     foreach (DataRow row in tables.Rows)
                     {
-                        string tableName = row["TABLE_NAME"].ToString();
+                        string? tableName = row["TABLE_NAME"]?.ToString();
                         
-                        // Skip system tables
-                        if (tableName.StartsWith("sys") || tableName.StartsWith("dt_"))
+                        // Skip null/empty table names, system tables
+                        if (string.IsNullOrEmpty(tableName) || 
+                            tableName.StartsWith("sys") || 
+                            tableName.StartsWith("dt_"))
                             continue;
                         
                         List<string> columns = new List<string>();
                         
-                        using (SqlCommand command = new SqlCommand($"SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{tableName}'", connection))
+                        using (SqlCommand command = new SqlCommand(
+                            $"SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName", 
+                            connection))
                         {
+                            // Use parameter to prevent SQL injection
+                            command.Parameters.AddWithValue("@TableName", tableName);
+                            
                             using (SqlDataReader reader = command.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
-                                    string columnName = reader["COLUMN_NAME"].ToString();
-                                    string dataType = reader["DATA_TYPE"].ToString();
+                                    string? columnName = reader["COLUMN_NAME"]?.ToString() ?? "Unknown";
+                                    string? dataType = reader["DATA_TYPE"]?.ToString() ?? "Unknown";
                                     columns.Add($"{columnName} ({dataType})");
                                 }
                             }

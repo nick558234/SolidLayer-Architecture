@@ -39,15 +39,23 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label asp-for="Dish.HealthFactor" class="form-label">Health Factor</label>
-                            <select asp-for="Dish.HealthFactor" class="form-select">
-                                <option value="">Select health factor...</option>
-                                <option value="Very Healthy">Very Healthy</option>
-                                <option value="Healthy">Healthy</option>
-                                <option value="Moderate">Moderate</option>
-                                <option value="Less Healthy">Less Healthy</option>
-                                <option value="Unhealthy">Unhealthy</option>
-                            </select>
+                            <label asp-for="Dish.HealthFactor" class="form-label">Health Factor (0-100)</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="number" asp-for="Dish.HealthFactor" class="form-control" min="0" max="100" value="50" />
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="healthFactorSelect" class="form-select" onchange="updateHealthFactor(this.value)">
+                                        <option value="">Or choose level...</option>
+                                        <option value="100">Very Healthy (100)</option>
+                                        <option value="75">Healthy (75)</option>
+                                        <option value="50">Moderate (50)</option>
+                                        <option value="25">Less Healthy (25)</option>
+                                        <option value="0">Unhealthy (0)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">0 = Unhealthy, 100 = Very Healthy</small>
                             <span asp-validation-for="Dish.HealthFactor" class="text-danger"></span>
                         </div>
 
@@ -71,4 +79,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function updateHealthFactor(value) {
+            if (value) {
+                document.getElementById('Dish_HealthFactor').value = value;
+            }
+        }
+    </script>
 }

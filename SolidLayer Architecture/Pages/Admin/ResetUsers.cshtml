@@ -1,0 +1,54 @@
+@page
+@model SolidLayer_Architecture.Pages.Admin.ResetUsersModel
+@{
+    ViewData["Title"] = "Reset Users";
+}
+
+<div class="container">
+    <h1>Reset User Passwords</h1>
+    
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> @Model.StatusMessage
+        </div>
+    }
+    
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> @Model.ErrorMessage
+        </div>
+    }
+    
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">Reset Default User Passwords</h5>
+        </div>
+        <div class="card-body">
+            <p>This will reset the passwords for the default users to their original values:</p>
+            
+            <ul>
+                <li><strong>Admin:</strong> admin@swipentry.com / admin123</li>
+                <li><strong>Restaurant Owner:</strong> restaurant@example.com / password123</li>
+                <li><strong>Regular User:</strong> user@example.com / password123</li>
+            </ul>
+            
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i> Warning: Use this feature only in development environments!
+            </div>
+            
+            <form method="post" asp-page-handler="Reset">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-key"></i> Reset Default Passwords
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a asp-page="/Admin/Users" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to User Management
+        </a>
+    </div>
+</div>

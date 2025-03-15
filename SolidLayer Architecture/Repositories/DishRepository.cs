@@ -1,14 +1,24 @@
 using Microsoft.Data.SqlClient;
 using SolidLayer_Architecture.Data;
-using Swipe2TryCore.Models;
+using Swipe2TryCore.Models; // Use only this model namespace
 using System.Data;
 
 namespace SolidLayer_Architecture.Repositories
 {
-    public class DishRepository : IRepository<Dish>
+    /// <summary>
+    /// Repository for managing dish data using direct SQL queries
+    /// </summary>
+    public class DishRepository : IRepository<Swipe2TryCore.Models.Dish> // Explicit namespace reference
     {
         private readonly string? _connectionString;
         private readonly ILogger<DishRepository> _logger;
+
+        // Maximum field lengths to prevent database errors
+        private const int MAX_ID_LENGTH = 10;
+        private const int MAX_NAME_LENGTH = 100;
+        private const int MAX_DESCRIPTION_LENGTH = 500;
+        private const int MAX_PHOTO_LENGTH = 255;
+        private const int MAX_HEALTHFACTOR_LENGTH = 20;
 
         public DishRepository(IConfiguration configuration, ILogger<DishRepository> logger)
         {
@@ -22,44 +32,20 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        // Helper method to ensure ID is within allowed length and correctly formatted
-        private string EnsureIdLength(string id, int maxLength = 10)
-        {
-            // If empty, generate a clean ID
-            if (string.IsNullOrEmpty(id))
-            {
-                // Use a simple format with a random number prefix between 100-999
-                return $"d{new Random().Next(100, 999)}{new Random().Next(1000, 9999)}";
-            }
-                
-            // If the ID is too long or contains hyphens, generate a new ID
-            if (id.Length > maxLength || id.Contains("-"))
-            {
-                // Preserve the first character if it's alphabetic
-                char firstChar = id.Length > 0 && char.IsLetter(id[0]) ? id[0] : 'd';
-                
-                // Create a clean ID with some randomness
-                return $"{firstChar}{new Random().Next(100, 999)}{new Random().Next(1000, 9999)}";
-            }
-            
-            return id;
-        }
+        #region CRUD Operations
 
-        // Helper method to ensure text fields don't exceed DB column length
-        private string LimitLength(string? value, int maxLength)
-        {
-            if (string.IsNullOrEmpty(value))
-                return string.Empty;
-                
-            return value.Length > maxLength ? value.Substring(0, maxLength) : value;
-        }
-
-        public IEnumerable<Dish> GetAll()
+        /// <summary>
+        /// Retrieves all dishes from the database
+        /// </summary>
+        public IEnumerable<Swipe2TryCore.Models.Dish> GetAll()
         {
             return ExecuteQuery("SELECT * FROM DISHES");
         }
 
-        public Dish? GetById(string id)
+        /// <summary>
+        /// Retrieves a specific dish by its ID
+        /// </summary>
+        public Swipe2TryCore.Models.Dish? GetById(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -71,69 +57,77 @@ namespace SolidLayer_Architecture.Repositories
                 new SqlParameter("@DishID", id)).FirstOrDefault();
         }
 
-        public void Insert(Dish dish)
+        /// <summary>
+        /// Inserts a new dish into the database
+        /// </summary>
+        public void Insert(Swipe2TryCore.Models.Dish dish)
         {
             try
             {
-                // Ensure dish ID is not too long for the database column
-                dish.DishID = EnsureIdLength(dish.DishID ?? Guid.NewGuid().ToString());
+                // Ensure dish has a valid ID and all fields respect length constraints
+                PrepareDishForStorage(dish);
                 
                 string sql = @"
                     INSERT INTO DISHES (DishID, Name, Description, Photo, HealthFactor) 
                     VALUES (@DishID, @Name, @Description, @Photo, @HealthFactor)";
                 
-                // The error shows HealthFactor column is being truncated, so we need to limit its length
-                // Seems the database column is smaller than we expected
-                var parameters = new[]
-                {
-                    new SqlParameter("@DishID", dish.DishID),
-                    new SqlParameter("@Name", LimitLength(dish.Name, 100)),
-                    new SqlParameter("@Description", LimitLength(dish.Description, 500)),
-                    new SqlParameter("@Photo", LimitLength(dish.Photo, 255)),
-                    new SqlParameter("@HealthFactor", LimitLength(dish.HealthFactor, 20)) // Reduced from 50 to 20 characters
-                };
+                var parameters = CreateSqlParameters(dish);
                 
-                _logger.LogInformation("Inserting dish with ID {DishId} using raw SQL", dish.DishID);
+                _logger.LogInformation("Inserting dish with ID {DishId}", dish.DishID);
                 var rowsAffected = ExecuteNonQuery(sql, parameters);
                 _logger.LogInformation("Insert successful, {Rows} rows affected", rowsAffected);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inserting dish with raw SQL. Error message: {Message}", ex.Message);
-                throw; // Don't fallback to EF Core since we've removed it
+                _logger.LogError(ex, "Error inserting dish. Error message: {Message}", ex.Message);
+                throw;
             }
         }
 
-        public void Update(Dish dish)
+        /// <summary>
+        /// Updates an existing dish in the database
+        /// </summary>
+        public void Update(Swipe2TryCore.Models.Dish dish)
         {
-            string sql = "UPDATE DISHES SET Name = @Name, Description = @Description, Photo = @Photo, HealthFactor = @HealthFactor WHERE DishID = @DishID";
+            // Ensure fields respect length constraints
+            string sql = @"
+                UPDATE DISHES 
+                SET Name = @Name, 
+                    Description = @Description, 
+                    Photo = @Photo, 
+                    HealthFactor = @HealthFactor 
+                WHERE DishID = @DishID";
             
-            var parameters = new[]
-            {
-                new SqlParameter("@DishID", dish.DishID),
-                new SqlParameter("@Name", LimitLength(dish.Name, 100)),
-                new SqlParameter("@Description", LimitLength(dish.Description, 500)),
-                new SqlParameter("@Photo", LimitLength(dish.Photo, 255)),
-                new SqlParameter("@HealthFactor", LimitLength(dish.HealthFactor, 20)) // Reduced from 50 to 20
-            };
+            var parameters = CreateSqlParameters(dish);
             
             ExecuteNonQuery(sql, parameters);
         }
 
+        /// <summary>
+        /// Deletes a dish from the database by ID
+        /// </summary>
         public void Delete(string id)
         {
-            ExecuteNonQuery("DELETE FROM DISHES WHERE DishID = @DishID", new SqlParameter("@DishID", id));
+            ExecuteNonQuery("DELETE FROM DISHES WHERE DishID = @DishID", 
+                new SqlParameter("@DishID", id));
         }
 
-        public IEnumerable<Dish> ExecuteQuery(string sql, params object[] parameters)
+        #endregion
+
+        #region SQL Execution Methods
+
+        /// <summary>
+        /// Executes a SQL query and maps the results to Dish objects
+        /// </summary>
+        public IEnumerable<Swipe2TryCore.Models.Dish> ExecuteQuery(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {
                 _logger.LogError("Connection string is null");
-                return Enumerable.Empty<Dish>();
+                return Enumerable.Empty<Swipe2TryCore.Models.Dish>();
             }
 
-            List<Dish> dishes = new List<Dish>();
+            List<Swipe2TryCore.Models.Dish> dishes = new List<Swipe2TryCore.Models.Dish>();
 
             try
             {
@@ -151,25 +145,7 @@ namespace SolidLayer_Architecture.Repositories
                     {
                         while (reader.Read())
                         {
-                            try
-                            {
-                                var dish = new Dish
-                                {
-                                    DishID = reader["DishID"]?.ToString() ?? string.Empty,
-                                    Name = reader["Name"]?.ToString() ?? string.Empty,
-                                    Description = reader["Description"]?.ToString() ?? string.Empty,
-                                    Photo = reader["Photo"]?.ToString() ?? string.Empty,
-                                    HealthFactor = reader["HealthFactor"]?.ToString() ?? string.Empty,
-                                    Categories = new List<Category>(),
-                                    Restaurants = new List<Restaurant>(),
-                                    LikeDislikes = new List<LikeDislike>()
-                                };
-                                dishes.Add(dish);
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogError(ex, "Error mapping SQL result to Dish object. Column may be missing.");
-                            }
+                            dishes.Add(MapDishFromReader(reader));
                         }
                     }
                 }
@@ -183,6 +159,9 @@ namespace SolidLayer_Architecture.Repositories
             return dishes;
         }
 
+        /// <summary>
+        /// Executes a SQL command that doesn't return results (INSERT/UPDATE/DELETE)
+        /// </summary>
         public int ExecuteNonQuery(string sql, params object[] parameters)
         {
             if (_connectionString == null)
@@ -213,7 +192,10 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public Dish? ExecuteScalar(string sql, params object[] parameters)
+        /// <summary>
+        /// Executes a SQL command that returns a single result
+        /// </summary>
+        public Swipe2TryCore.Models.Dish? ExecuteScalar(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {
@@ -232,7 +214,6 @@ namespace SolidLayer_Architecture.Repositories
                     }
 
                     connection.Open();
-                    _logger.LogInformation("Executing SQL scalar: {Sql}", sql);
                     var result = command.ExecuteScalar();
                     
                     if (result != null)
@@ -249,5 +230,94 @@ namespace SolidLayer_Architecture.Repositories
             
             return null;
         }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Creates SQL parameters for a dish
+        /// </summary>
+        private SqlParameter[] CreateSqlParameters(Swipe2TryCore.Models.Dish dish)
+        {
+            return new[]
+            {
+                new SqlParameter("@DishID", dish.DishID),
+                new SqlParameter("@Name", LimitLength(dish.Name, MAX_NAME_LENGTH)),
+                new SqlParameter("@Description", LimitLength(dish.Description, MAX_DESCRIPTION_LENGTH)),
+                new SqlParameter("@Photo", LimitLength(dish.Photo, MAX_PHOTO_LENGTH)),
+                new SqlParameter("@HealthFactor", LimitLength(dish.HealthFactor, MAX_HEALTHFACTOR_LENGTH))
+            };
+        }
+
+        /// <summary>
+        /// Maps a data reader row to a Dish object
+        /// </summary>
+        private Swipe2TryCore.Models.Dish MapDishFromReader(SqlDataReader reader)
+        {
+            var dish = new Swipe2TryCore.Models.Dish
+            {
+                DishID = reader["DishID"].ToString() ?? string.Empty,
+                Name = reader["Name"].ToString() ?? string.Empty,
+                Description = reader["Description"]?.ToString() ?? string.Empty,
+                Photo = reader["Photo"]?.ToString() ?? string.Empty,
+                // Store health factor as string but it represents a numeric value
+                HealthFactor = reader["HealthFactor"]?.ToString() ?? string.Empty,
+                // Initialize collections to avoid null references
+                Categories = new List<Category>(),
+                Restaurants = new List<Restaurant>(),
+                LikeDislikes = new List<LikeDislike>()
+            };
+
+            return dish;
+        }
+
+        /// <summary>
+        /// Prepares a dish for database storage by ensuring all fields meet requirements
+        /// </summary>
+        private void PrepareDishForStorage(Swipe2TryCore.Models.Dish dish)
+        {
+            // Generate or clean up the dish ID
+            dish.DishID = EnsureIdLength(dish.DishID ?? Guid.NewGuid().ToString());
+            
+            // Initialize collections
+            dish.Categories ??= new List<Category>();
+            dish.Restaurants ??= new List<Restaurant>();
+            dish.LikeDislikes ??= new List<LikeDislike>();
+        }
+
+        /// <summary>
+        /// Ensures ID is within allowed length and has valid format
+        /// </summary>
+        private string EnsureIdLength(string id, int maxLength = MAX_ID_LENGTH)
+        {
+            // If empty, generate a clean ID with 'd' prefix and numeric suffix
+            if (string.IsNullOrEmpty(id))
+            {
+                return $"d{DateTime.Now.Ticks % 900000 + 100000}";
+            }
+                
+            // If the ID is too long or contains hyphens, generate a new ID
+            if (id.Length > maxLength || id.Contains("-"))
+            {
+                char firstChar = id.Length > 0 && char.IsLetter(id[0]) ? id[0] : 'd';
+                return $"{firstChar}{new Random().Next(100000, 999999)}";
+            }
+            
+            return id;
+        }
+
+        /// <summary>
+        /// Ensures text fields don't exceed DB column length
+        /// </summary>
+        private string LimitLength(string? value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+                
+            return value.Length > maxLength ? value.Substring(0, maxLength) : value;
+        }
+
+        #endregion
     }
 }

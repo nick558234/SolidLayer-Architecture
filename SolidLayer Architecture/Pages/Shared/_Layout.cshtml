@@ -32,34 +32,77 @@
                                 <i class="bi bi-hand-index-thumb"></i> Swipe
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/User/HealthDashboard">
-                                <i class="bi bi-heart-pulse"></i> Health Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="restaurantDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-shop"></i> Restaurant
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="restaurantDropdown">
-                                <li><a class="dropdown-item" asp-page="/RestaurantOwner/Dashboard">Dashboard</a></li>
-                                <li><a class="dropdown-item" asp-page="/RestaurantOwner/AddDish">Add New Dish</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-page="/Dishes/Index">Manage All Dishes</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-gear"></i> Admin
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" asp-page="/Diagnostics">Diagnostics</a></li>
-                                <li><a class="dropdown-item" asp-page="/ManualQuery">SQL Query</a></li>
-                            </ul>
-                        </li>
+                        
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/User/HealthDashboard">
+                                    <i class="bi bi-heart-pulse"></i> Health Dashboard
+                                </a>
+                            </li>
+                            
+                            @if (User.IsInRole("RestaurantOwner") || User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="restaurantDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-shop"></i> Restaurant
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="restaurantDropdown">
+                                        <li><a class="dropdown-item" asp-page="/RestaurantOwner/Dashboard">Dashboard</a></li>
+                                        <li><a class="dropdown-item" asp-page="/RestaurantOwner/AddDish">Add New Dish</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-page="/Dishes/Index">Manage All Dishes</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-gear"></i> Admin
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item" asp-page="/Admin/Users">Manage Users</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Diagnostics">Diagnostics</a></li>
+                                        <li><a class="dropdown-item" asp-page="/ManualQuery">SQL Query</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> @(User.Identity?.Name ?? "User")
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li>
+                                        <span class="dropdown-item-text text-muted">
+                                            <small>Role: @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</small>
+                                        </span>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/Logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-area="" asp-page="/Account/Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

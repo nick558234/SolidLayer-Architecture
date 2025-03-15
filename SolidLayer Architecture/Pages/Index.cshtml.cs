@@ -14,6 +14,7 @@ namespace SolidLayer_Architecture.Pages
         {
             _dishService = dishService;
             _likeDislikeService = likeDislikeService;
+            SearchTerm = string.Empty; // Initialize to avoid the warning
         }
 
         public IList<Dish> Dishes { get; set; } = new List<Dish>();

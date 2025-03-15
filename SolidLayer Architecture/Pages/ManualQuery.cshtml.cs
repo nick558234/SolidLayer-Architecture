@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
+using SolidLayer_Architecture.Models;
 using System.Data;
 
 namespace SolidLayer_Architecture.Pages
@@ -14,6 +15,14 @@ namespace SolidLayer_Architecture.Pages
         {
             _configuration = configuration;
             _logger = logger;
+            
+            // Initialize non-nullable properties to avoid warnings
+            SqlQuery = string.Empty;
+            Results = new DataTable();
+            ErrorMessage = string.Empty;
+            
+            // Or use reflection-based initializer
+            ModelInitializers.InitializePageProperties(this);
         }
 
         [BindProperty]

@@ -5,6 +5,9 @@ using Swipe2TryCore.Models;
 
 namespace SolidLayer_Architecture.Pages.RestaurantOwner
 {
+    /// <summary>
+    /// Page model for showing detailed dish information with analytics
+    /// </summary>
     public class DishDetailsModel : PageModel
     {
         private readonly IDishService _dishService;
@@ -21,7 +24,10 @@ namespace SolidLayer_Architecture.Pages.RestaurantOwner
             _logger = logger;
         }
 
+        // Dish information
         public Dish? Dish { get; set; }
+        
+        // Analytics data
         public int LikesCount { get; set; }
         public int DislikesCount { get; set; }
         public int EngagementRate { get; set; }
@@ -32,24 +38,40 @@ namespace SolidLayer_Architecture.Pages.RestaurantOwner
         {
             if (string.IsNullOrEmpty(id))
             {
-                _logger.LogWarning("Dish details requested without an ID in restaurant owner area");
+                _logger.LogWarning("Dish details requested without an ID");
                 return RedirectToPage("Dashboard");
             }
 
+            // Load the dish
             Dish = _dishService.GetDishById(id);
+            
             if (Dish == null)
             {
-                _logger.LogWarning("Dish with ID {DishId} not found in restaurant owner details view", id);
+                _logger.LogWarning("Dish with ID {dishId} not found", id);
                 return Page();
             }
 
-            // Get likes and dislikes counts
-            LikesCount = _likeDislikeService.GetLikeCount(id);
-            DislikesCount = _likeDislikeService.GetDislikeCount(id);
+            // Calculate analytics for the dish
+            CalculateAnalytics(id);
 
-            // Calculate engagement rate
+            return Page();
+        }
+        
+        /// <summary>
+        /// Calculates various analytics metrics for the dish
+        /// </summary>
+        private void CalculateAnalytics(string dishId)
+        {
+            // Get basic feedback counts
+            LikesCount = _likeDislikeService.GetLikeCount(dishId);
+            DislikesCount = _likeDislikeService.GetDislikeCount(dishId);
+            
+            // Calculate total interactions
             int totalInteractions = LikesCount + DislikesCount;
-            EngagementRate = totalInteractions > 0 ? (int)(totalInteractions * 100.0 / Math.Max(totalInteractions, 1)) : 0;
+            
+            // Calculate user engagement rate (each user who interacted as percentage of total users)
+            // For simplicity, we just use the interaction count now
+            EngagementRate = totalInteractions > 0 ? 100 : 0;
 
             // Calculate like/dislike percentages
             if (totalInteractions > 0)
@@ -57,8 +79,12 @@ namespace SolidLayer_Architecture.Pages.RestaurantOwner
                 LikePercentage = (int)(LikesCount * 100.0 / totalInteractions);
                 DislikePercentage = 100 - LikePercentage;
             }
-
-            return Page();
+            else
+            {
+                // Default values when there are no interactions
+                LikePercentage = 50;
+                DislikePercentage = 50;
+            }
         }
     }
 }
