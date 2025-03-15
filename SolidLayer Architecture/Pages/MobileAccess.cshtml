@@ -1,0 +1,48 @@
+@page
+@model SolidLayer_Architecture.Pages.MobileAccessModel
+@{
+    ViewData["Title"] = "Mobile Access";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2>Access this app on your mobile device</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <p><i class="bi bi-info-circle-fill me-2"></i> Make sure your phone is connected to the same WiFi network as this computer.</p>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <h3>Scan this QR code</h3>
+                        <div class="mb-3">
+                            <img src="@Model.QRCodeUrl" alt="QR Code for app URL" class="img-fluid" style="max-width: 300px;" />
+                        </div>
+                        <p>or type this URL in your mobile browser:</p>
+                        <div class="alert alert-success">
+                            <h4>http://@Model.ServerIP:@Model.ServerPort</h4>
+                        </div>
+                    </div>
+                    
+                    <h4>Troubleshooting:</h4>
+                    <ul>
+                        <li>If the QR code doesn't work, try manually entering the URL</li>
+                        <li>If you can't connect, make sure your phone is on the same WiFi network</li>
+                        <li>Check if your computer firewall is blocking the connection</li>
+                        <li>Try disabling any VPN services on your computer or phone</li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Note:</strong> This is a development setup only. For production use, you would deploy the application to a proper hosting service.
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/" class="btn btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

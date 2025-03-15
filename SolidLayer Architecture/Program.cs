@@ -8,6 +8,13 @@ using Swipe2TryCore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to listen on all network interfaces
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5235); // HTTP port
+    serverOptions.ListenAnyIP(7217, configure => configure.UseHttps()); // HTTPS port
+});
+
 // Register database initializer
 builder.Services.AddScoped<DatabaseInitializer>();
 builder.Services.AddScoped<DatabaseCleanupTool>();
