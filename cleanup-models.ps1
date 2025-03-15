@@ -12,18 +12,24 @@ $filesToDelete = @(
     "LikeDislike.cs",
     "Restaurant.cs", 
     "RestaurantCategory.cs",
-    "Dish.cs"
+    "Dish.cs",
+    "ModelHelpers.cs"
 )
 
-# Delete each file if it exists
-foreach ($file in $filesToDelete) {
-    $filePath = Join-Path -Path $modelsDir -ChildPath $file
-    if (Test-Path $filePath) {
-        Write-Host "Deleting redundant model: $file"
-        Remove-Item -Path $filePath -Force
-    } else {
-        Write-Host "File does not exist: $file"
+# Check if the directory exists first
+if (Test-Path $modelsDir) {
+    # Delete each file if it exists
+    foreach ($file in $filesToDelete) {
+        $filePath = Join-Path -Path $modelsDir -ChildPath $file
+        if (Test-Path $filePath) {
+            Write-Host "Deleting redundant model: $file"
+            Remove-Item -Path $filePath -Force
+        } else {
+            Write-Host "File does not exist: $file"
+        }
     }
+    
+    Write-Host "Cleanup complete."
+} else {
+    Write-Host "Models directory not found at: $modelsDir"
 }
-
-Write-Host "Cleanup complete."

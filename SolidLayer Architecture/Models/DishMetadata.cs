@@ -31,14 +31,14 @@ namespace SolidLayer_Architecture.Models
         // Mark collections as not required for validation
         [BindingBehavior(BindingBehavior.Never)]
         [ValidateNever]
-        public ICollection<Category>? Categories { get; set; }
+        public ICollection<Swipe2TryCore.Models.Category>? Categories { get; set; }
 
         [BindingBehavior(BindingBehavior.Never)]
         [ValidateNever]
-        public ICollection<Restaurant>? Restaurants { get; set; }
+        public ICollection<Swipe2TryCore.Models.Restaurant>? Restaurants { get; set; }
 
         [BindingBehavior(BindingBehavior.Never)]
         [ValidateNever]
-        public ICollection<LikeDislike>? LikeDislikes { get; set; }
+        public ICollection<Swipe2TryCore.Models.LikeDislike>? LikeDislikes { get; set; }
     }
 }
