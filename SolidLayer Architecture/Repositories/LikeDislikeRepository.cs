@@ -1,10 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Swipe2TryCore.Models; // Use only this model namespace
+using Swipe2TryCore.Models; // Use only Swipe2TryCore models
 using System.Data;
 
 namespace SolidLayer_Architecture.Repositories
 {
-    public class LikeDislikeRepository : IRepository<Swipe2TryCore.Models.LikeDislike>
+    public class LikeDislikeRepository : IRepository<LikeDislike>
     {
         private readonly string? _connectionString;
         private readonly ILogger<LikeDislikeRepository> _logger;
@@ -67,12 +67,12 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetAll()
+        public IEnumerable<LikeDislike> GetAll()
         {
             return ExecuteQuery("SELECT * FROM LIKES_DISLIKES");
         }
 
-        public Swipe2TryCore.Models.LikeDislike? GetById(string id)
+        public LikeDislike? GetById(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -84,7 +84,7 @@ namespace SolidLayer_Architecture.Repositories
                 new SqlParameter("@LikeDislikeID", id)).FirstOrDefault();
         }
 
-        public void Insert(Swipe2TryCore.Models.LikeDislike likeDislike)
+        public void Insert(LikeDislike likeDislike)
         {
             // Generate a new ID if none is provided
             if (string.IsNullOrEmpty(likeDislike.LikeDislikeID))
@@ -109,7 +109,7 @@ namespace SolidLayer_Architecture.Repositories
             _logger.LogInformation("Insert successful, {Rows} rows affected", rowsAffected);
         }
 
-        public void Update(Swipe2TryCore.Models.LikeDislike likeDislike)
+        public void Update(LikeDislike likeDislike)
         {
             string sql = "UPDATE LIKES_DISLIKES SET UserID = @UserID, DishID = @DishID, IsLike = @IsLike WHERE LikeDislikeID = @LikeDislikeID";
             
@@ -130,19 +130,19 @@ namespace SolidLayer_Architecture.Repositories
                 new SqlParameter("@LikeDislikeID", id));
         }
 
-        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByUserIdAndDishId(string userId, string dishId)
+        public IEnumerable<LikeDislike> GetByUserIdAndDishId(string userId, string dishId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE UserID = @UserID AND DishID = @DishID";
             return ExecuteQuery(sql, new SqlParameter("@UserID", userId), new SqlParameter("@DishID", dishId));
         }
 
-        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByUserId(string userId)
+        public IEnumerable<LikeDislike> GetByUserId(string userId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE UserID = @UserID";
             return ExecuteQuery(sql, new SqlParameter("@UserID", userId));
         }
 
-        public IEnumerable<Swipe2TryCore.Models.LikeDislike> GetByDishId(string dishId)
+        public IEnumerable<LikeDislike> GetByDishId(string dishId)
         {
             string sql = "SELECT * FROM LIKES_DISLIKES WHERE DishID = @DishID";
             return ExecuteQuery(sql, new SqlParameter("@DishID", dishId));
@@ -206,15 +206,15 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public IEnumerable<Swipe2TryCore.Models.LikeDislike> ExecuteQuery(string sql, params object[] parameters)
+        public IEnumerable<LikeDislike> ExecuteQuery(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {
                 _logger.LogError("Connection string is null");
-                return Enumerable.Empty<Swipe2TryCore.Models.LikeDislike>();
+                return Enumerable.Empty<LikeDislike>();
             }
 
-            List<Swipe2TryCore.Models.LikeDislike> likeDislikes = new List<Swipe2TryCore.Models.LikeDislike>();
+            List<LikeDislike> likeDislikes = new List<LikeDislike>();
 
             try
             {
@@ -234,7 +234,7 @@ namespace SolidLayer_Architecture.Repositories
                             try
                             {
                                 // Create and initialize a new LikeDislike with data from the reader
-                                var likeDislike = new Swipe2TryCore.Models.LikeDislike
+                                var likeDislike = new LikeDislike
                                 {
                                     LikeDislikeID = reader["LikeDislikeID"]?.ToString() ?? string.Empty,
                                     UserID = reader["UserID"]?.ToString() ?? string.Empty,
@@ -293,7 +293,7 @@ namespace SolidLayer_Architecture.Repositories
             }
         }
 
-        public Swipe2TryCore.Models.LikeDislike? ExecuteScalar(string sql, params object[] parameters)
+        public LikeDislike? ExecuteScalar(string sql, params object[] parameters)
         {
             if (_connectionString == null)
             {

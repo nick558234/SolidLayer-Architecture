@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.SqlClient;
-using SolidLayer_Architecture.Models;
-using System.Data;
+using SolidLayer_Architecture.Helpers;
 
 namespace SolidLayer_Architecture.Pages
 {
@@ -10,82 +8,58 @@ namespace SolidLayer_Architecture.Pages
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<ManualQueryModel> _logger;
-
+        
         public ManualQueryModel(IConfiguration configuration, ILogger<ManualQueryModel> logger)
         {
             _configuration = configuration;
             _logger = logger;
-            
-            // Initialize non-nullable properties to avoid warnings
-            SqlQuery = string.Empty;
-            Results = new DataTable();
-            ErrorMessage = string.Empty;
-            
-            // Or use reflection-based initializer
-            ModelInitializers.InitializePageProperties(this);
         }
-
+        
         [BindProperty]
-        public string SqlQuery { get; set; }
-
-        [BindProperty]
-        public string QueryType { get; set; } = "Select";
-
-        public DataTable Results { get; private set; }
-
-        public int? AffectedRows { get; private set; }
-
-        public string ErrorMessage { get; private set; }
-
+        public string SqlQuery { get; set; } = "SELECT * FROM DISHES";
+        
+        public List<Dictionary<string, object>> QueryResults { get; set; } = new List<Dictionary<string, object>>();
+        
+        public string ErrorMessage { get; set; } = string.Empty;
+        
+        public bool IsReadOnly { get; set; } = true;
+        
         public void OnGet()
         {
-            // Default query example
-            SqlQuery = "SELECT * FROM DISHES";
+            // Initialize page with default query
         }
-
-        public IActionResult OnPost()
+        
+        public IActionResult OnPost(bool executeAsReadOnly = true)
         {
+            IsReadOnly = executeAsReadOnly;
+            
             try
             {
-                var connectionString = _configuration.GetConnectionString("DefaultConnection");
-
-                if (string.IsNullOrEmpty(SqlQuery))
+                string connectionString = _configuration.GetConnectionString("DefaultConnection") ?? 
+                    throw new InvalidOperationException("Connection string not found.");
+                
+                if (IsReadOnly)
                 {
-                    ErrorMessage = "SQL query cannot be empty.";
-                    return Page();
+                    // Execute as read-only query
+                    QueryResults = QueryHelper.ExecuteQuery(connectionString, SqlQuery, _logger);
                 }
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                else
                 {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand(SqlQuery, connection);
-
-                    if (QueryType == "Select")
+                    // Execute as potentially modifying query
+                    int rowsAffected = QueryHelper.ExecuteNonQuery(connectionString, SqlQuery, _logger);
+                    Dictionary<string, object> resultRow = new Dictionary<string, object>
                     {
-                        // Execute SELECT query
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                        {
-                            Results = new DataTable();
-                            adapter.Fill(Results);
-                        }
-                        
-                        _logger.LogInformation("SELECT query executed successfully. Rows returned: {RowCount}", 
-                            Results?.Rows.Count ?? 0);
-                    }
-                    else
-                    {
-                        // Execute non-query (INSERT, UPDATE, DELETE)
-                        AffectedRows = command.ExecuteNonQuery();
-                        _logger.LogInformation("Non-query executed successfully. Rows affected: {RowCount}", AffectedRows);
-                    }
+                        { "Result", $"{rowsAffected} row(s) affected." }
+                    };
+                    QueryResults.Add(resultRow);
                 }
-
+                
                 return Page();
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
-                _logger.LogError(ex, "Error executing SQL query: {Query}", SqlQuery);
+                _logger.LogError(ex, "Error executing SQL query");
+                ErrorMessage = $"Error: {ex.Message}";
                 return Page();
             }
         }

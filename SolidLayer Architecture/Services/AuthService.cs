@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SolidLayer_Architecture.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore models
 using SolidLayer_Architecture.Repositories;
 using System.Security.Claims;
 

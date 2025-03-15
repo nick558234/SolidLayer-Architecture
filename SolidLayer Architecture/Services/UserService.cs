@@ -1,4 +1,4 @@
-using SolidLayer_Architecture.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore models
 using SolidLayer_Architecture.Repositories;
 
 namespace SolidLayer_Architecture.Services

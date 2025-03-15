@@ -1,5 +1,5 @@
 using Microsoft.Data.SqlClient;
-using SolidLayer_Architecture.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore models instead
 using System.Security.Cryptography;
 using System.Text;
 

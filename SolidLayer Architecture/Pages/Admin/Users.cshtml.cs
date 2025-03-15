@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SolidLayer_Architecture.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore models
 using SolidLayer_Architecture.Services;
 
 namespace SolidLayer_Architecture.Pages.Admin
@@ -19,8 +19,8 @@ namespace SolidLayer_Architecture.Pages.Admin
             _logger = logger;
         }
 
-        public IList<SolidLayer_Architecture.Models.User> Users { get; set; } = new List<SolidLayer_Architecture.Models.User>();
-        public SelectList Roles { get; set; } = new SelectList(Enumerable.Empty<Role>(), "RoleID", "RoleName");
+        public IList<Swipe2TryCore.Models.User> Users { get; set; } = new List<Swipe2TryCore.Models.User>();
+        public SelectList Roles { get; set; } = new SelectList(Enumerable.Empty<Swipe2TryCore.Models.Role>(), "RoleID", "RoleName");
 
         [TempData]
         public string StatusMessage { get; set; } = string.Empty;

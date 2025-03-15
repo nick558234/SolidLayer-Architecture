@@ -4,100 +4,76 @@
     ViewData["Title"] = "Manual SQL Query";
 }
 
-<h1>Manual SQL Query</h1>
+<div class="container">
+    <h1>Manual SQL Query</h1>
+    <p class="lead">Execute SQL queries against the database. Read-only mode is recommended.</p>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Execute SQL</h5>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <h6>Common Queries:</h6>
-                    <div class="btn-group mb-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setQuery('SELECT * FROM DISHES')">Show All Dishes</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setQuery('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = \'DISHES\'')">Show DISHES Schema</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setQuery('SELECT TOP 10 * FROM DISHES ORDER BY DishID DESC')">Latest 10 Dishes</button>
-                    </div>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger">
+                    <h5><i class="bi bi-exclamation-triangle-fill"></i> Error</h5>
+                    <pre>@Model.ErrorMessage</pre>
                 </div>
-                
-                <form method="post">
-                    <div class="form-group mb-3">
-                        <label asp-for="SqlQuery">SQL Query:</label>
-                        <textarea asp-for="SqlQuery" id="sqlQuery" class="form-control" rows="5" required></textarea>
-                        <span asp-validation-for="SqlQuery" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label>Query Type:</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" asp-for="QueryType" id="query-select" value="Select" checked>
-                            <label class="form-check-label" for="query-select">SELECT (Query)</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" asp-for="QueryType" id="query-nonquery" value="NonQuery">
-                            <label class="form-check-label" for="query-nonquery">INSERT/UPDATE/DELETE (Non-Query)</label>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Execute</button>
-                </form>
+            }
 
-                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-                {
-                    <div class="alert alert-danger mt-3">
-                        <h5>Error:</h5>
-                        <pre>@Model.ErrorMessage</pre>
-                    </div>
-                }
-
-                @if (Model.AffectedRows.HasValue)
-                {
-                    <div class="alert alert-success mt-3">
-                        <h5>Success:</h5>
-                        <p>Query executed successfully. Rows affected: @Model.AffectedRows</p>
-                    </div>
-                }
-
-                @if (Model.Results != null && Model.Results.Rows.Count > 0)
-                {
-                    <div class="mt-4">
-                        <h4>Results:</h4>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        @foreach (System.Data.DataColumn column in Model.Results.Columns)
-                                        {
-                                            <th>@column.ColumnName</th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (System.Data.DataRow row in Model.Results.Rows)
-                                    {
-                                        <tr>
-                                            @foreach (var item in row.ItemArray)
-                                            {
-                                                <td>@(item?.ToString() ?? "NULL")</td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group mb-3">
+                            <label for="SqlQuery" class="form-label">SQL Query:</label>
+                            <textarea asp-for="SqlQuery" class="form-control font-monospace" rows="5" placeholder="SELECT * FROM DISHES"></textarea>
                         </div>
-                    </div>
-                }
+                        <div class="d-flex justify-content-between">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="executeAsReadOnly" name="executeAsReadOnly" checked value="true">
+                                <label class="form-check-label" for="executeAsReadOnly">Execute as read-only</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-play-fill"></i> Execute Query
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-        function setQuery(query) {
-            document.getElementById('sqlQuery').value = query;
-        }
-    </script>
-}
+    @if (Model.QueryResults.Any())
+    {
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5>Query Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                @foreach (var column in Model.QueryResults.First().Keys)
+                                {
+                                    <th>@column</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in Model.QueryResults)
+                            {
+                                <tr>
+                                    @foreach (var item in row)
+                                    {
+                                        <td>@item.Value</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-info">@Model.QueryResults.Count rows returned</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

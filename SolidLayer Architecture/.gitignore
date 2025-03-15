@@ -1,0 +1,11 @@
+# Redundant model files that are now in Swipe2TryCore
+/Models/User.cs
+/Models/Role.cs
+/Models/Category.cs
+/Models/DishCategory.cs
+/Models/DishRestaurant.cs
+/Models/LikeDislike.cs
+/Models/Restaurant.cs
+/Models/RestaurantCategory.cs
+/Models/ModelHelpers.cs
+/Models/Dish.cs

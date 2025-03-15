@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SolidLayer_Architecture.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore models
 using SolidLayer_Architecture.Services;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,7 +27,7 @@ namespace SolidLayer_Architecture.Pages.Account
 
         public string ReturnUrl { get; set; } = string.Empty;
 
-        public IList<Role> AvailableRoles { get; set; } = new List<Role>();
+        public IList<Swipe2TryCore.Models.Role> AvailableRoles { get; set; } = new List<Swipe2TryCore.Models.Role>();
 
         public void OnGet(string returnUrl = "/")
         {
@@ -55,7 +55,7 @@ namespace SolidLayer_Architecture.Pages.Account
             try
             {
                 // Create the user with regular user role by default
-                var user = new SolidLayer_Architecture.Models.User
+                var user = new Swipe2TryCore.Models.User
                 {
                     Name = Input.Name,
                     Email = Input.Email,

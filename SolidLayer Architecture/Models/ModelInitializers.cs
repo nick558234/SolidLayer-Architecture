@@ -20,7 +20,6 @@ namespace SolidLayer_Architecture.Models
                 Description = string.Empty,
                 Photo = string.Empty,
                 HealthFactor = string.Empty,
-                // Use explicit instantiation of the Swipe2TryCore collections
                 Categories = new List<Swipe2TryCore.Models.Category>(),
                 Restaurants = new List<Swipe2TryCore.Models.Restaurant>(),
                 LikeDislikes = new List<Swipe2TryCore.Models.LikeDislike>()
@@ -38,8 +37,8 @@ namespace SolidLayer_Architecture.Models
                 UserID = string.Empty,
                 DishID = string.Empty,
                 IsLike = false,
-                User = null!, // Using null-forgiving operator for navigation properties
-                Dish = null!  // Navigation properties will be populated when needed
+                User = new Swipe2TryCore.Models.User(),  
+                Dish = new Swipe2TryCore.Models.Dish()  
             };
         }
 
