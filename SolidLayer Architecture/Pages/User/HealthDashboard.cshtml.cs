@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SolidLayer_Architecture.Models;
 using SolidLayer_Architecture.Services;
-using Swipe2TryCore.Models;
+using Swipe2TryCore.Models; // Use Swipe2TryCore.Models instead of SolidLayer_Architecture.Models
 
 namespace SolidLayer_Architecture.Pages.User
 {
@@ -40,7 +39,7 @@ namespace SolidLayer_Architecture.Pages.User
             Description = "Track your food choices and make healthier decisions.";
         }
 
-        public List<Swipe2TryCore.Models.Dish> LikedDishes { get; set; } = new List<Swipe2TryCore.Models.Dish>();
+        public List<Dish> LikedDishes { get; set; } = new List<Dish>();
         public int HealthScore { get; set; }
         public string HealthScoreColorClass { get; set; }
         public string HealthScoreMessage { get; set; }
