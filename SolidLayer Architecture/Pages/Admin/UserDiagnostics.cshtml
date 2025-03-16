@@ -1,0 +1,128 @@
+@page
+@model SolidLayer_Architecture.Pages.Admin.UserDiagnosticsModel
+@{
+    ViewData["Title"] = "User Diagnostics";
+}
+
+<div class="container">
+    <h1>User Diagnostics</h1>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> @Model.ErrorMessage
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Force Setup Default Users</h5>
+                </div>
+                <div class="card-body">
+                    <p>This will create or update the default users with correct passwords:</p>
+                    <form method="post" asp-page-handler="ForceSetupUsers">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-shield-lock"></i> Force Create/Reset Default Users
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Registered Users</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Count == 0)
+                    {
+                        <div class="alert alert-warning">No users found in the database.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.Users)
+                                {
+                                    <tr>
+                                        <td>@user["UserID"]</td>
+                                        <td>@user["Name"]</td>
+                                        <td>@user["Email"]</td>
+                                        <td>@user["Role"]</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Available Roles</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Roles.Count == 0)
+                    {
+                        <div class="alert alert-warning">No roles found in the database.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>@role["RoleID"]</td>
+                                        <td>@role["RoleName"]</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <a asp-page="/Admin/Users" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to User Management
+        </a>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">Login Credentials Reference</h5>
+        </div>
+        <div class="card-body">
+            <h6>Default Users:</h6>
+            <ul>
+                <li><strong>Admin:</strong> admin@swipe2try.com / admin123</li>
+                <li><strong>Restaurant Owner:</strong> restaurant@example.com / password123</li>
+                <li><strong>Regular User:</strong> user@example.com / password123</li>
+            </ul>
+        </div>
+    </div>
+</div>

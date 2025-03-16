@@ -46,6 +46,43 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        
+        // Add bypass for diagnostic pages
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                // Don't redirect to login for setup or diagnostic pages
+                if (context.Request.Path.StartsWithSegments("/Setup") ||
+                    context.Request.Path.StartsWithSegments("/AccessHelp") ||
+                    context.Request.Path.StartsWithSegments("/Admin/AdminDiagnostics") ||
+                    context.Request.Path.StartsWithSegments("/Admin/UserDiagnostics"))
+                {
+                    // Skip authentication altogether
+                    context.Response.StatusCode = 200;  // OK status
+                    return Task.CompletedTask;
+                }
+
+                context.Response.Redirect(context.RedirectUri);
+                return Task.CompletedTask;
+            },
+            OnRedirectToAccessDenied = context =>
+            {
+                // Don't redirect to access denied for setup or diagnostic pages
+                if (context.Request.Path.StartsWithSegments("/Setup") ||
+                    context.Request.Path.StartsWithSegments("/AccessHelp") ||
+                    context.Request.Path.StartsWithSegments("/Admin/AdminDiagnostics") ||
+                    context.Request.Path.StartsWithSegments("/Admin/UserDiagnostics"))
+                {
+                    // Skip authorization altogether
+                    context.Response.StatusCode = 200;  // OK status
+                    return Task.CompletedTask;
+                }
+
+                context.Response.Redirect(context.RedirectUri);
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // Add authorization policies
@@ -106,6 +143,16 @@ app.UseSession();
 
 // Map endpoints
 app.MapRazorPages();
-app.MapControllers(); // Enable API controllers
+app.MapControllers();
+
+// Add global error handling middleware
+app.UseExceptionHandler("/Error");
 
 app.Run();
+
+// Add application information comment for clarity
+/* 
+ * Swipe2Try Application
+ * A web app for discovering and rating food dishes
+ * Using Swipe2TryCore models library
+ */

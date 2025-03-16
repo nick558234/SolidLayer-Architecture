@@ -1,0 +1,74 @@
+@page
+@model SolidLayer_Architecture.Pages.SetupModel
+@{
+    ViewData["Title"] = "System Setup";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="alert alert-warning mb-4">
+        <h4><i class="bi bi-exclamation-triangle-fill"></i> System Setup</h4>
+        <p>This page provides access to diagnostic and setup tools when you can't log in as an administrator.</p>
+        <p><strong>Important:</strong> For security reasons, please disable this page in production environments.</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-shield-lock text-primary"></i> Admin Diagnostics</h5>
+                    <p class="card-text">Diagnose and fix issues with administrator accounts.</p>
+                    <a href="/Admin/AdminDiagnostics" class="btn btn-primary">Access Tool</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-people text-success"></i> User Diagnostics</h5>
+                    <p class="card-text">Manage user accounts and roles in the system.</p>
+                    <a href="/Admin/UserDiagnostics" class="btn btn-success">Access Tool</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-database-fill-check text-info"></i> Database Check</h5>
+                    <p class="card-text">Run a database connection test to verify your setup.</p>
+                    <a href="/Diagnostics" class="btn btn-info">Access Tool</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Fix: Admin Account</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminDiagnostics?handler=ForceCreateAdmin" method="post">
+                        <p>Click the button below to automatically create/reset the admin account:</p>
+                        <ul>
+                            <li><strong>Email:</strong> admin@swipe2try.com</li>
+                            <li><strong>Password:</strong> admin123</li>
+                        </ul>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-key"></i> Create/Reset Admin Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <a href="/" class="btn btn-secondary">
+            <i class="bi bi-house"></i> Back to Home
+        </a>
+    </div>
+</div>

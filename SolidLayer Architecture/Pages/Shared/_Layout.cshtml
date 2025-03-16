@@ -3,19 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"] - Swipe 'n Try</title>
+    <title>@ViewData["Title"] - Swipe2Try</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/SolidLayer_Architecture.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">
-                    <i class="bi bi-hand-index-thumb me-2"></i>Swipe 'n Try
-                </a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Swipe2Try</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,9 +31,24 @@
                                 <i class="bi bi-hand-index-thumb"></i> Swipe
                             </a>
                         </li>
+                        
+                        <!-- Add a direct Setup link that doesn't require authentication -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Setup">
+                                <i class="bi bi-wrench"></i> Setup
+                            </a>
+                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/MobileAccess">
                                 <i class="bi bi-phone"></i> Mobile Access
+                            </a>
+                        </li>
+                        
+                        <!-- Add direct links for debugging and access -->
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" asp-area="" asp-page="/FixAdmin">
+                                <i class="bi bi-wrench"></i> Fix Admin
                             </a>
                         </li>
                         
@@ -123,7 +137,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    &copy; 2023 - Swipe 'n Try - <a asp-area="" asp-page="/Privacy">Privacy</a>
+                    &copy; 2024 - Swipe2Try - <a asp-area="" asp-page="/Privacy">Privacy</a>
                 </div>
                 <div class="col-md-6 text-end">
                     <p class="small text-muted">

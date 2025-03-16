@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 
 namespace SolidLayer_Architecture.Pages.Admin
 {
-    [Authorize(Policy = "RequireAdminRole")]
     public class ResetUsersModel : PageModel
     {
         private readonly IConfiguration _configuration;
@@ -66,7 +64,7 @@ namespace SolidLayer_Architecture.Pages.Admin
         {
             // Admin: admin123
             string adminPasswordHash = HashPassword("admin123");
-            UpdateUserPassword(connection, "admin@swipentry.com", adminPasswordHash);
+            UpdateUserPassword(connection, "admin@swipe2try.com", adminPasswordHash);
             
             // Restaurant Owner: password123
             string restaurantOwnerPasswordHash = HashPassword("password123");

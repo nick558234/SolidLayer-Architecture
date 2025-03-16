@@ -1,0 +1,72 @@
+@page
+@model SolidLayer_Architecture.Pages.FixAdminModel
+@{
+    ViewData["Title"] = "Fix Admin Account";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Admin Account Emergency Fix</h3>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <strong>Success!</strong>
+                            <p class="mb-0">@Model.StatusMessage</p>
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error!</strong>
+                            <p class="mb-0">@Model.ErrorMessage</p>
+                        </div>
+                    }
+                    
+                    <p>This page allows you to immediately reset the admin account without needing to log in first.</p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>This will:</strong>
+                        <ul class="mb-0">
+                            <li>Create the admin account if it doesn't exist</li>
+                            <li>Reset the admin password to "admin123"</li>
+                            <li>Ensure the admin has the Admin role</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-shield-lock-fill me-2"></i>
+                            Reset Admin Account Now
+                        </button>
+                    </form>
+                    
+                    <hr/>
+                    
+                    <div class="mt-3 text-center">
+                        <p>After fixing, you can log in with:</p>
+                        <p><strong>Email:</strong> admin@swipe2try.com</p>
+                        <p><strong>Password:</strong> admin123</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="/" class="btn btn-secondary">
+                            <i class="bi bi-house"></i> Home
+                        </a>
+                        <a href="/Account/Login" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Go to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -104,7 +104,7 @@ namespace SolidLayer_Architecture.Repositories
             try
             {
                 // Check for admin user
-                bool adminExists = CheckUserExists(connection, "admin@swipentry.com");
+                bool adminExists = CheckUserExists(connection, "admin@swipe2try.com");
                 if (!adminExists)
                 {
                     InsertDefaultAdmin(connection);
@@ -288,7 +288,7 @@ namespace SolidLayer_Architecture.Repositories
                 
                 string insertAdminSql = @"
                     INSERT INTO USERS (UserID, Name, Email, Password, RoleID) 
-                    VALUES ('u1', 'Administrator', 'admin@swipentry.com', @Password, 'r1')";
+                    VALUES ('u1', 'Administrator', 'admin@swipe2try.com', @Password, 'r1')";
                     
                 using (SqlCommand command = new SqlCommand(insertAdminSql, connection))
                 {
