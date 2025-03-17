@@ -371,3 +371,202 @@ footer a:hover {
   font-weight: 500;
   padding: 0.5em 0.8em;
 }
+
+/* Custom cotton candy scroll bar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cotton-candy-white);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    var(--cotton-candy-pink),
+    var(--cotton-candy-purple)
+  );
+  border-radius: 10px;
+  border: 3px solid var(--cotton-candy-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    var(--cotton-candy-purple),
+    var(--cotton-candy-blue)
+  );
+}
+
+/* Fluffy cloud effects */
+.cotton-cloud {
+  position: relative;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 30px;
+  box-shadow: 
+    0 10px 20px rgba(138, 79, 125, 0.1),
+    inset 0 -10px 15px -5px rgba(255, 182, 193, 0.2),
+    inset 0 10px 15px -5px rgba(166, 225, 250, 0.2);
+  margin-bottom: 30px;
+}
+
+.cotton-cloud::before,
+.cotton-cloud::after {
+  content: "";
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+}
+
+.cotton-cloud::before {
+  width: 40px;
+  height: 40px;
+  top: -15px;
+  left: 20%;
+  box-shadow: 
+    0 5px 10px rgba(138, 79, 125, 0.1),
+    inset 0 -5px 10px -2px rgba(255, 182, 193, 0.2);
+}
+
+.cotton-cloud::after {
+  width: 60px;
+  height: 60px;
+  top: -25px;
+  left: 50%;
+  box-shadow: 
+    0 8px 15px rgba(138, 79, 125, 0.1),
+    inset 0 -8px 15px -3px rgba(166, 225, 250, 0.2);
+}
+
+/* Candy sprinkles background */
+.sprinkles-bg {
+  position: relative;
+}
+
+.sprinkles-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, var(--cotton-candy-pink) 2px, transparent 2px),
+    radial-gradient(circle at 30% 70%, var(--cotton-candy-blue) 2px, transparent 2px),
+    radial-gradient(circle at 50% 40%, var(--cotton-candy-purple) 2px, transparent 2px),
+    radial-gradient(circle at 70% 80%, var(--cotton-candy-yellow) 2px, transparent 2px),
+    radial-gradient(circle at 90% 10%, var(--cotton-candy-mint) 2px, transparent 2px);
+  background-size: 100px 100px;
+  opacity: 0.1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Candy cane striped sections */
+.candy-stripe {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--cotton-candy-white),
+    var(--cotton-candy-white) 10px,
+    var(--cotton-candy-pink-light) 10px,
+    var(--cotton-candy-pink-light) 20px
+  );
+  padding: 20px;
+  border-radius: 15px;
+}
+
+/* Animated sugar sparkles */
+.sugar-sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.sugar-sparkle::after {
+  content: "✨";
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  color: var(--cotton-candy-yellow);
+  animation: sparkle 1.5s infinite;
+  text-shadow: 0 0 5px var(--cotton-candy-white);
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(25deg); }
+}
+
+/* Swirly text highlights */
+.swirl-highlight {
+  background: linear-gradient(120deg, 
+    transparent 0%,
+    var(--cotton-candy-yellow) 30%,
+    var(--cotton-candy-pink-light) 70%,
+    transparent 100%);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* Interactive elements - sweets hover effect */
+.sweet-item {
+  transition: all 0.3s ease;
+}
+
+.sweet-item:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* Cotton candy navigation pills */
+.nav-pills .nav-link {
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin: 0 5px;
+  color: var(--cotton-candy-dark);
+  background-color: var(--cotton-candy-white);
+  border: 2px solid var(--cotton-candy-pink);
+  transition: all 0.3s;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: var(--cotton-candy-pink-light);
+  transform: translateY(-3px);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--cotton-candy-pink);
+  color: var(--cotton-candy-white);
+  box-shadow: 0 4px 8px rgba(255, 182, 193, 0.4);
+}
+
+/* Page transitions */
+.page-content {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Soft shadow behind text */
+.candy-text-shadow {
+  text-shadow: 2px 2px 4px rgba(138, 79, 125, 0.2);
+}
+
+/* Fluffy input field glow */
+.fluffy-input {
+  border: 2px solid var(--cotton-candy-purple-light);
+  border-radius: 20px;
+  padding: 10px 15px;
+  transition: all 0.3s;
+  box-shadow: 0 0 0 0 rgba(224, 176, 255, 0);
+}
+
+.fluffy-input:focus {
+  box-shadow: 0 0 0 4px rgba(224, 176, 255, 0.3);
+  transform: translateY(-2px);
+}

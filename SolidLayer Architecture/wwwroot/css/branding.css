@@ -1,5 +1,5 @@
 :root {
-    /* Suikerspin (Cotton Candy) colors */
+    /* Cotton Candy colors - enhanced for more vibrant cotton candy feel */
     --cotton-candy-pink: #ffb6c1;
     --cotton-candy-blue: #a6e1fa;
     --cotton-candy-purple: #e0b0ff;
@@ -8,7 +8,12 @@
     --cotton-candy-white: #ffffff;
     --cotton-candy-dark: #8a4f7d;
     --cotton-candy-gray: #5a5a5a;
-
+    
+    /* Additional cotton candy colors */
+    --cotton-candy-pink-light: #ffd6e1;
+    --cotton-candy-blue-light: #d6f3ff;
+    --cotton-candy-purple-light: #f0d0ff;
+    
     /* Map Bootstrap variables to cotton candy colors */
     --primary: var(--cotton-candy-purple);
     --primary-hover: #cd9eec;
@@ -27,87 +32,135 @@
     --dark: var(--cotton-candy-dark);
 }
 
-/* Primary button overrides */
+/* Overall body background */
+body {
+    background: linear-gradient(135deg, 
+        var(--cotton-candy-white) 0%,
+        var(--cotton-candy-blue-light) 40%, 
+        var(--cotton-candy-pink-light) 80%,
+        var(--cotton-candy-purple-light) 100%);
+    background-attachment: fixed;
+}
+
+/* Primary button overrides - fluffier look */
 .btn-primary {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--cotton-candy-dark);
+    box-shadow: 0 4px 8px rgba(224, 176, 255, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
     background-color: var(--primary-hover) !important;
-    border-color: var(--primary-hover) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(224, 176, 255, 0.5) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
-/* Secondary button overrides */
+/* Secondary button overrides - cotton candy style */
 .btn-secondary {
     background-color: var(--secondary);
     border-color: var(--secondary);
     color: var(--cotton-candy-dark);
+    box-shadow: 0 4px 8px rgba(255, 182, 193, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
     background-color: var(--secondary-hover) !important;
-    border-color: var(--secondary-hover) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 182, 193, 0.5) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
-/* Success button overrides */
+/* Success button overrides - fluffy mint style */
 .btn-success {
     background-color: var(--success);
     border-color: var(--success);
     color: var(--cotton-candy-dark);
+    box-shadow: 0 4px 8px rgba(193, 240, 207, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active {
     background-color: var(--success-hover) !important;
-    border-color: var(--success-hover) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(193, 240, 207, 0.5) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
-/* Info button overrides */
+/* Info button overrides - fluffy blue style */
 .btn-info {
     background-color: var(--info);
     border-color: var(--info);
     color: var(--cotton-candy-dark);
+    box-shadow: 0 4px 8px rgba(166, 225, 250, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-info:hover, .btn-info:focus, .btn-info:active {
     background-color: #8fd5f9 !important;
-    border-color: #8fd5f9 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(166, 225, 250, 0.5) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
-/* Warning button overrides */
+/* Warning button overrides - fluffy yellow style */
 .btn-warning {
     background-color: var(--warning);
     border-color: var(--warning);
     color: var(--cotton-candy-dark);
+    box-shadow: 0 4px 8px rgba(255, 240, 179, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-warning:hover, .btn-warning:focus, .btn-warning:active {
     background-color: #ffe38a !important;
-    border-color: #ffe38a !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 240, 179, 0.5) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
-/* Danger button overrides */
+/* Danger button overrides - cotton candy red style */
 .btn-danger {
     background-color: var(--danger);
     border-color: var(--danger);
     color: white;
+    box-shadow: 0 4px 8px rgba(255, 136, 136, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s;
+    border: none;
 }
 
 .btn-danger:hover, .btn-danger:focus, .btn-danger:active {
     background-color: #ff6666 !important;
-    border-color: #ff6666 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 136, 136, 0.5) !important;
     color: white !important;
 }
 
-/* Navbar branding */
+/* Navbar branding - cotton candy clouds */
 .navbar {
-    background-color: var(--cotton-candy-yellow) !important;
+    background: linear-gradient(to right, 
+        var(--cotton-candy-pink) 0%, 
+        var(--cotton-candy-blue) 50%, 
+        var(--cotton-candy-purple) 100%) !important;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 15px rgba(224, 176, 255, 0.3);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border: none;
 }
 
 .navbar-brand {
@@ -115,45 +168,52 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--cotton-candy-dark) !important;
+    color: white !important;
+    text-shadow: 1px 1px 2px var(--cotton-candy-dark);
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: var(--cotton-candy-dark);
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin: 0 3px;
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-    color: var(--secondary-hover);
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-/* Background colors */
+/* Background colors - cotton candy swirls */
 .bg-primary {
-    background-color: var(--primary) !important;
-    color: var(--cotton-candy-dark) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-purple) 0%, var(--primary-hover) 100%) !important;
+    color: white !important;
 }
 
 .bg-secondary {
-    background-color: var(--secondary) !important;
-    color: var(--cotton-candy-dark) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-pink) 0%, var(--secondary-hover) 100%) !important;
+    color: white !important;
 }
 
 .bg-success {
-    background-color: var(--success) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-mint) 0%, var(--success-hover) 100%) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .bg-info {
-    background-color: var(--info) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-blue) 0%, #8fd5f9 100%) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .bg-warning {
-    background-color: var(--warning) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-yellow) 0%, #ffe38a 100%) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .bg-danger {
-    background-color: var(--danger) !important;
+    background: linear-gradient(135deg, var(--danger) 0%, #ff6666 100%) !important;
     color: white !important;
 }
 
@@ -162,117 +222,245 @@
 }
 
 .bg-dark {
-    background-color: var(--dark) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-dark) 0%, #6a2d5d 100%) !important;
     color: white !important;
 }
 
-/* Forms and inputs */
+/* Forms and inputs - cotton candy glow */
+.form-control {
+    border: 2px solid var(--cotton-candy-purple-light);
+    border-radius: 15px;
+    padding: 10px 15px;
+    transition: all 0.3s;
+}
+
 .form-control:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 0.25rem rgba(224, 176, 255, 0.25);
+    transform: translateY(-3px);
 }
 
-/* Cards */
+/* Cards - cotton candy puffs */
+.card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 30px rgba(138, 79, 125, 0.1);
+    transition: all 0.5s;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(138, 79, 125, 0.2);
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 15px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, 
+        var(--cotton-candy-pink), 
+        var(--cotton-candy-blue), 
+        var(--cotton-candy-purple));
+}
+
 .card-header.bg-primary {
-    background-color: var(--primary) !important;
-    color: var(--cotton-candy-dark) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-purple), var(--primary-hover)) !important;
+    color: white !important;
 }
 
 .card-header.bg-secondary {
-    background-color: var(--secondary) !important;
-    color: var(--cotton-candy-dark) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-pink), var(--secondary-hover)) !important;
+    color: white !important;
 }
 
 .card-header.bg-info {
-    background-color: var(--info) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-blue), #8fd5f9) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .card-header.bg-success {
-    background-color: var(--success) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-mint), var(--success-hover)) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .card-header.bg-warning {
-    background-color: var(--warning) !important;
+    background: linear-gradient(135deg, var(--cotton-candy-yellow), #ffe38a) !important;
     color: var(--cotton-candy-dark) !important;
 }
 
 .card-header.bg-danger {
-    background-color: var(--danger) !important;
+    background: linear-gradient(135deg, var(--danger), #ff6666) !important;
     color: white !important;
 }
 
-/* Alerts */
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    background-color: rgba(242, 242, 242, 0.5);
+    border-top: none;
+    padding: 15px 20px;
+}
+
+/* Alerts - cotton candy notifications */
+.alert {
+    border: none;
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 2px;
+}
+
 .alert-primary {
     background-color: var(--primary-light);
-    border-color: var(--primary);
     color: var(--cotton-candy-dark);
+}
+
+.alert-primary::before {
+    background-color: var(--primary);
 }
 
 .alert-success {
     background-color: #e9f9ee;
-    border-color: var(--success);
     color: var(--cotton-candy-dark);
+}
+
+.alert-success::before {
+    background-color: var(--success);
 }
 
 .alert-info {
     background-color: #e3f6fe;
-    border-color: var(--info);
     color: var(--cotton-candy-dark);
+}
+
+.alert-info::before {
+    background-color: var(--info);
 }
 
 .alert-warning {
     background-color: #fffbe5;
-    border-color: var(--warning);
     color: var(--cotton-candy-dark);
+}
+
+.alert-warning::before {
+    background-color: var(--warning);
 }
 
 .alert-danger {
     background-color: #ffeeee;
-    border-color: var(--danger);
     color: var(--cotton-candy-dark);
+}
+
+.alert-danger::before {
+    background-color: var(--danger);
 }
 
 /* Logo styling */
 .brand-logo {
-    height: 40px;
+    height: 45px;
     width: auto;
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2));
+    animation: float 3s ease-in-out infinite;
 }
 
-/* Links */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Links - cotton candy sweet spots */
 a {
     color: var(--primary);
+    transition: all 0.3s;
+    text-decoration: none;
+    position: relative;
 }
 
 a:hover {
     color: var(--primary-hover);
+    text-decoration: none;
 }
 
-/* Footer */
+a:not(.btn):not(.nav-link):not(.navbar-brand):hover::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, 
+        var(--cotton-candy-pink), 
+        var(--cotton-candy-purple));
+    border-radius: 1px;
+}
+
+/* Footer - cotton candy cloud base */
 .footer {
-    background-color: var(--cotton-candy-yellow) !important;
-    color: var(--cotton-candy-dark) !important;
+    background: linear-gradient(to right, 
+        var(--cotton-candy-purple) 0%,
+        var(--cotton-candy-blue) 50%, 
+        var(--cotton-candy-pink) 100%) !important;
+    color: white !important;
+    border-top: none;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 15px rgba(224, 176, 255, 0.3);
+    padding: 20px 0;
 }
 
 .footer a {
-    color: var(--cotton-candy-dark) !important;
+    color: white !important;
+    font-weight: 600;
 }
 
 .footer a:hover {
-    color: var(--secondary-hover) !important;
-    text-decoration: underline;
+    color: var(--cotton-candy-yellow) !important;
+    text-decoration: none !important;
 }
 
-/* Custom badge styles */
+/* Custom badge styles - cotton candy sprinkles */
+.badge {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
 .badge.bg-primary { 
     background-color: var(--primary) !important;
-    color: var(--cotton-candy-dark) !important;
+    color: white !important;
 }
 
 .badge.bg-secondary { 
     background-color: var(--secondary) !important;
-    color: var(--cotton-candy-dark) !important;
+    color: white !important;
 }
 
 .badge.bg-success { 
@@ -288,4 +476,135 @@ a:hover {
 .badge.bg-warning { 
     background-color: var(--warning) !important;
     color: var(--cotton-candy-dark) !important;
+}
+
+/* Tables - cotton candy layers */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(138, 79, 125, 0.1);
+}
+
+.table thead {
+    background: linear-gradient(to right, 
+        var(--cotton-candy-purple) 0%, 
+        var(--primary-hover) 100%);
+}
+
+.table thead th {
+    border-bottom: none;
+    color: white;
+    font-weight: 600;
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: rgba(224, 176, 255, 0.05);
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.table tbody td {
+    padding: 12px 15px;
+    border-top: none;
+}
+
+/* List groups - cotton candy stacks */
+.list-group-item {
+    border: none;
+    padding: 15px;
+    margin-bottom: 8px;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(138, 79, 125, 0.08);
+    transition: all 0.3s;
+}
+
+.list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(138, 79, 125, 0.1);
+}
+
+.list-group-item-action:hover {
+    background-color: rgba(224, 176, 255, 0.05);
+}
+
+/* Dropdown menus - cotton candy puffs */
+.dropdown-menu {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(138, 79, 125, 0.15);
+    overflow: hidden;
+    padding: 10px;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    margin-bottom: 5px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(224, 176, 255, 0.1);
+    transform: translateX(5px);
+}
+
+/* Special cotton candy decorations */
+.cotton-candy-divider {
+    height: 5px;
+    background: linear-gradient(to right, 
+        var(--cotton-candy-pink),
+        var(--cotton-candy-blue), 
+        var(--cotton-candy-purple), 
+        var(--cotton-candy-yellow));
+    border-radius: 2.5px;
+    margin: 2rem 0;
+    opacity: 0.7;
+}
+
+/* Cotton candy cloud effect for containers */
+.cotton-candy-cloud {
+    position: relative;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 
+        0 10px 30px rgba(138, 79, 125, 0.1),
+        inset 0 -20px 25px -5px rgba(255, 182, 193, 0.2),
+        inset 0 20px 25px -5px rgba(166, 225, 250, 0.2);
+}
+
+.cotton-candy-cloud::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 5%;
+    right: 5%;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 10px 20px rgba(138, 79, 125, 0.1);
+    z-index: -1;
+}
+
+/* Spinning candy effect for loaders */
+.candy-spinner {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(224, 176, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--cotton-candy-purple);
+    animation: spin 1s ease-in-out infinite;
+    margin: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
