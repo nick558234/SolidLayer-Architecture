@@ -6,15 +6,20 @@
     <title>@ViewData["Title"] - Swipe2Try</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/branding.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/SolidLayer_Architecture.styles.css" asp-append-version="true" />
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Swipe2Try</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="/images/logo.png" alt="Swipe2Try Logo" class="brand-logo" />
+                    <span>Swipe2Try</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,107 +27,22 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">
-                                <i class="bi bi-house-door"></i> Home
-                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Dishes/Swipe">
-                                <i class="bi bi-hand-index-thumb"></i> Swipe
-                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/Dishes/Index">Dishes</a>
                         </li>
-                        
-                        <!-- Add a direct Setup link that doesn't require authentication -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Setup">
-                                <i class="bi bi-wrench"></i> Setup
-                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/Dishes/Swipe">Swipe</a>
                         </li>
-                        
+                        <!-- Direct access to tools -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/MobileAccess">
-                                <i class="bi bi-phone"></i> Mobile Access
-                            </a>
-                        </li>
-                        
-                        <!-- Add direct links for debugging and access -->
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" asp-area="" asp-page="/FixAdmin">
+                            <a class="nav-link" asp-area="" asp-page="/FixAdmin">
                                 <i class="bi bi-wrench"></i> Fix Admin
                             </a>
                         </li>
-                        
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/User/HealthDashboard">
-                                    <i class="bi bi-heart-pulse"></i> Health Dashboard
-                                </a>
-                            </li>
-                            
-                            @if (User.IsInRole("RestaurantOwner") || User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="restaurantDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-shop"></i> Restaurant
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="restaurantDropdown">
-                                        <li><a class="dropdown-item" asp-page="/RestaurantOwner/Dashboard">Dashboard</a></li>
-                                        <li><a class="dropdown-item" asp-page="/RestaurantOwner/AddDish">Add New Dish</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-page="/Dishes/Index">Manage All Dishes</a></li>
-                                    </ul>
-                                </li>
-                            }
-                            
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-gear"></i> Admin
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                        <li><a class="dropdown-item" asp-page="/Admin/Users">Manage Users</a></li>
-                                        <li><a class="dropdown-item" asp-page="/Diagnostics">Diagnostics</a></li>
-                                        <li><a class="dropdown-item" asp-page="/ManualQuery">SQL Query</a></li>
-                                    </ul>
-                                </li>
-                            }
-                        }
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
                     </ul>
-                    
-                    <ul class="navbar-nav">
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-person-circle"></i> @(User.Identity?.Name ?? "User")
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li>
-                                        <span class="dropdown-item-text text-muted">
-                                            <small>Role: @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</small>
-                                        </span>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-page="/Account/Logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Register</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-primary" asp-area="" asp-page="/Account/Login">Login</a>
-                            </li>
-                        }
-                    </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
@@ -133,16 +53,16 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted py-3">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     &copy; 2024 - Swipe2Try - <a asp-area="" asp-page="/Privacy">Privacy</a>
                 </div>
                 <div class="col-md-6 text-end">
-                    <p class="small text-muted">
-                        Your next meal is just a swipe away.
-                    </p>
+                    <a href="/MobileAccess">
+                        <i class="bi bi-phone"></i> Mobile Access
+                    </a>
                 </div>
             </div>
         </div>

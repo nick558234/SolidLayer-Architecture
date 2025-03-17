@@ -8,8 +8,20 @@ html {
   }
 }
 
+:root {
+  /* Suikerspin kleuren */
+  --cotton-candy-pink: #ffb6c1;
+  --cotton-candy-blue: #a6e1fa;
+  --cotton-candy-purple: #e0b0ff;
+  --cotton-candy-yellow: #fff0b3;
+  --cotton-candy-mint: #c1f0cf;
+  --cotton-candy-white: #ffffff;
+  --cotton-candy-dark: #8a4f7d;
+  --cotton-candy-gray: #5a5a5a;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.25rem rgba(224, 176, 255, 0.25);
 }
 
 html {
@@ -19,4 +31,343 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: var(--cotton-candy-white);
+  color: var(--cotton-candy-dark);
+  background-image: linear-gradient(135deg, var(--cotton-candy-white) 85%, var(--cotton-candy-yellow) 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header styling */
+h1, h2, h3 {
+  color: var(--cotton-candy-dark);
+  border-bottom: 2px solid var(--cotton-candy-pink);
+  padding-bottom: 0.3rem;
+}
+
+h4, h5, h6 {
+  color: var(--cotton-candy-purple);
+}
+
+/* Primary button styling */
+.btn-primary {
+  background-color: var(--cotton-candy-blue);
+  border-color: var(--cotton-candy-blue);
+  color: var(--cotton-candy-gray);
+}
+
+.btn-primary:hover {
+  background-color: #8acfe6;
+  border-color: #8acfe6;
+}
+
+/* Secondary button styling */
+.btn-secondary {
+  background-color: var(--cotton-candy-pink);
+  border-color: var(--cotton-candy-pink);
+  color: var(--cotton-candy-gray);
+}
+
+.btn-secondary:hover {
+  background-color: #ff99b3;
+  border-color: #ff99b3;
+}
+
+/* Success styling for "healthy" indicators */
+.bg-success {
+  background-color: var(--cotton-candy-mint) !important;
+  color: var(--cotton-candy-dark) !important;
+}
+
+/* Warning styling for "moderate" health indicators */
+.bg-warning {
+  background-color: var(--cotton-candy-yellow) !important;
+  color: var(--cotton-candy-gray) !important;
+}
+
+/* Danger styling for "unhealthy" indicators */
+.bg-danger {
+  background-color: var(--cotton-candy-pink) !important;
+  color: var(--cotton-candy-dark) !important;
+}
+
+/* Card styling */
+.card {
+  border-color: var(--cotton-candy-purple);
+  box-shadow: 0 3px 12px rgba(224, 176, 255, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 15px;
+  overflow: hidden;
+  border-top: 4px solid var(--cotton-candy-purple);
+  border: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: var(--cotton-candy-mint);
+  border-bottom: none;
+  border-bottom: 2px dashed var(--cotton-candy-blue);
+}
+
+.card-header.bg-primary {
+  background-color: var(--cotton-candy-blue) !important;
+}
+
+/* Navigation styling */
+.navbar {
+  background-color: var(--cotton-candy-white);
+  box-shadow: 0 2px 8px rgba(138, 79, 125, 0.1);
+  background-image: linear-gradient(to right, var(--cotton-candy-pink), var(--cotton-candy-blue));
+}
+
+.navbar-brand, .navbar .nav-link {
+  color: var(--cotton-candy-white) !important;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(138, 79, 125, 0.2);
+}
+
+.navbar .nav-link:hover {
+  color: var(--cotton-candy-yellow) !important;
+}
+
+.navbar-toggler {
+  border-color: var(--cotton-candy-white);
+}
+
+/* Links */
+a {
+  color: var(--cotton-candy-purple);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--cotton-candy-dark);
+  text-decoration: none;
+}
+
+/* Tables */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead th {
+  background-color: var(--cotton-candy-purple);
+  color: var(--cotton-candy-white);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--cotton-candy-yellow);
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--cotton-candy-white);
+}
+
+/* Form controls */
+.form-control {
+  border-color: var(--cotton-candy-purple);
+  border-radius: 8px;
+}
+
+.form-control:focus {
+  border-color: var(--cotton-candy-pink);
+}
+
+/* Badges and labels */
+.badge-primary {
+  background-color: var(--cotton-candy-blue);
+}
+
+.badge-secondary {
+  background-color: var(--cotton-candy-purple);
+}
+
+/* Custom themed accents */
+.highlight-box {
+  border-left: 4px solid var(--cotton-candy-pink);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  background-color: rgba(255, 182, 193, 0.1);
+}
+
+/* Themed hover effects */
+.food-card {
+  overflow: hidden;
+  border-radius: 12px;
+  transition: transform 0.3s;
+  border: 2px dashed var(--cotton-candy-pink);
+}
+
+.food-card:hover {
+  transform: scale(1.03);
+  border-color: var(--cotton-candy-blue);
+}
+
+/* Main content sections */
+.content-section {
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  background-color: var(--cotton-candy-white);
+  box-shadow: 0 4px 15px rgba(138, 79, 125, 0.05);
+  border-top: 3px solid var(--cotton-candy-pink);
+}
+
+/* Themed dividers */
+hr {
+  border: 0;
+  height: 2px;
+  background: linear-gradient(to right, 
+    var(--cotton-candy-blue), 
+    var(--cotton-candy-pink), 
+    var(--cotton-candy-purple), 
+    var(--cotton-candy-yellow));
+  margin: 2rem 0;
+}
+
+/* Footer styling */
+footer {
+  background-color: var(--cotton-candy-purple);
+  color: var(--cotton-candy-white);
+  padding: 1rem 0;
+  border-top: 3px dashed var(--cotton-candy-pink);
+}
+
+footer a {
+  color: var(--cotton-candy-yellow);
+}
+
+footer a:hover {
+  color: var(--cotton-candy-white);
+}
+
+/* Suikerspin specifieke elementen */
+.cotton-candy-gradient {
+  background: linear-gradient(45deg, 
+    var(--cotton-candy-pink), 
+    var(--cotton-candy-blue), 
+    var(--cotton-candy-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+
+.sweet-shadow {
+  box-shadow: 0 5px 15px rgba(224, 176, 255, 0.4);
+}
+
+.candy-border {
+  border: 2px dashed var(--cotton-candy-pink);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.candy-accent {
+  position: relative;
+}
+
+.candy-accent::after {
+  content: "✨";
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
+
+/* Additional suikerspin-themed elements */
+.candy-button {
+  background-color: var(--cotton-candy-pink);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: var(--cotton-candy-dark);
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(224, 176, 255, 0.3);
+  transition: transform 0.2s;
+}
+
+.candy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(224, 176, 255, 0.4);
+}
+
+.candy-panel {
+  background-color: var(--cotton-candy-white);
+  border-radius: 15px;
+  border: 2px solid var(--cotton-candy-mint);
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.candy-panel::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 6px;
+  background: linear-gradient(to right,
+    var(--cotton-candy-pink),
+    var(--cotton-candy-blue),
+    var(--cotton-candy-purple));
+}
+
+/* Sweet animations */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  background-color: var(--cotton-candy-purple);
+  color: var(--cotton-candy-dark);
+  font-weight: 600;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(224, 176, 255, 0.1);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(224, 176, 255, 0.2);
+}
+
+/* Button styling */
+.btn {
+  border-radius: 30px;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 1rem;
+}
+
+/* Badge styling */
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
 }
