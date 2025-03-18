@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SolidLayer_Architecture.Data;
+using SolidLayer_Architecture.Interfaces.Repositories;
+using SolidLayer_Architecture.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register DatabaseInitializer as a scoped service
 builder.Services.AddScoped<DatabaseInitializer>();
+// Register repositories
+builder.Services.AddScoped<IDishRepository, DishRepository>();
+
+// ...and so on
 
 // Add Razor Pages services
 builder.Services.AddRazorPages();
