@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register DatabaseInitializer as a scoped service
+builder.Services.AddScoped<DatabaseInitializer>();
+
 // Add Razor Pages services
 builder.Services.AddRazorPages();
 
